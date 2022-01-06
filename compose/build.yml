@@ -1,0 +1,16 @@
+version: "2.1"
+services:
+  fanout-django-dev:
+    build:
+      context: ../
+      dockerfile: compose/django/Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
+    image: fanout-django-dev
+  fanout-django:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
+    image: ${CI_REGISTRY_IMAGE}:latest

@@ -1,0 +1,57 @@
+version: '2.1'
+services:
+  psql:
+    image: sameersbn/postgresql:9.6-2
+    ports:
+      - '5432:5432'
+
+    environment:
+      DB_NAME: ${CI_PROJECT_TITLE}
+      DB_PASS: ${CI_PROJECT_TITLE}
+      DB_USER: ${CI_PROJECT_TITLE}
+    volumes:
+      - /data/${CI_PROJECT_TITLE}/postgresql:/var/lib/postgresql
+
+  django_shell: # This is a one-shot command runner service, for manage.py or bash, it dies immediately
+    extends:
+      service: ${CI_PROJECT_TITLE}-django-dev
+      file: build.yml
+    volumes:
+      - ../:/app
+      - ../.pythonrc:/root/.pythonrc
+      - ../.pythonhist:/root/.pythonhist
+    links:
+      - psql
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_STORAGE_BUCKET_NAME
+      - DJANGO_SETTINGS_MODULE
+      - ENV
+      - SECRET_KEY=develop_key
+      - DEBUG=true
+      - SERVICE=django_shell
+    command: "bash"
+    entrypoint: []
+
+  runserver:
+    extends:
+      service: ${CI_PROJECT_TITLE}-django-dev
+      file: build.yml
+    #command: ["bash", "/app/compose/django/uwsgi.sh"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    ports:
+      - "$DEVELOP_BACKEND_PORT:8000"
+    links:
+      - psql
+    volumes:
+      - ../:/app
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_STORAGE_BUCKET_NAME
+      - DJANGO_SETTINGS_MODULE
+      - ENV
+      - SECRET_KEY=develop_key
+      - DEBUG=true
+      - SERVICE=runserver

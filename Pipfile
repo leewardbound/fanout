@@ -1,0 +1,48 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "==20.8b1"
+
+[packages]
+django = "~=3.2"
+django-environ = "*"
+django-cors-headers = "*"
+django-storages = "*"
+django-memoize = "*"
+django-debug-toolbar = "*"
+requests = "*"
+python-stdnum = "*"
+pillow = "*"
+uritemplate = "*"
+django-rest-framework = "*"
+django-extensions = "*"
+django-filter = "*"
+django-rest-registration = "*"
+django-timezone-field = "*"
+psycopg2-binary = "*"
+uwsgi = "*"
+whitenoise = "*"
+boto3 = "*"
+six = "*"
+celery = {extras = ["sqs"], version = "*"}
+django-anymail = {extras = ["sendgrid"], version = "*"}
+pytest-django = "*"
+pytest-xdist = "*"
+premailer = "*"
+retrying = "*"
+django-object-actions = "*"
+sorl-thumbnail = "*"
+ipython = "*"
+phonenumbers = "*"
+awesome-slugify = "*"
+django-redis = "*"
+autoflake = "*"
+pycurl = "*"
+graphene-django = "*"
+graphene-validator = "*"
+
+[requires]
+python_version = "3.8"

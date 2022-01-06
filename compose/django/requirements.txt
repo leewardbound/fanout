@@ -1,0 +1,16 @@
+django-auditlog
+django-ses
+django-s3-storage==0.12.4
+djangorestframework_simplejwt
+django-choices
+factory-boy
+jinja2
+pipenv
+whitenoise
+Werkzeug
+django-phonenumber-field[phonenumberslite]
+graphene-django
+python-dateutil
+django-lifecycle
+pyyaml
+

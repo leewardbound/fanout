@@ -1,0 +1,12 @@
+-r requirements.txt
+# Include dev dependencies in this file
+
+pylint
+black
+rope
+pylint-django
+pylint-celery
+bandit
+freezegun
+bpython
+pytest

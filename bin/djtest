@@ -1,0 +1,1 @@
+djmanage test --settings=fanout.settings.test_settings $*

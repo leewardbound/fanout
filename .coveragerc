@@ -1,0 +1,7 @@
+[coverage:run]
+source = fanout/apps
+branch = True
+
+omit =
+  fanout/apps/*/migrations/*
+  */__init__.py

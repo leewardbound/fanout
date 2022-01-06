@@ -1,0 +1,128 @@
+[
+  {
+    "model": "federation.domain",
+    "pk": "boundcorp.net",
+    "fields": {
+      "created_at": "2022-01-05T19:19:01.467Z",
+      "updated_at": "2022-01-05T19:19:01.467Z",
+      "info": null,
+      "info_updated": null
+    }
+  },
+  {
+    "model": "federation.actor",
+    "pk": "audrey",
+    "fields": {
+      "created_at": "2022-01-05T19:23:33.645Z",
+      "updated_at": "2022-01-05T19:23:33.645Z",
+      "url": "/user/audrey",
+      "type": "Person",
+      "display_name": "Audrey Bound",
+      "username": "audrey",
+      "domain": "boundcorp.net",
+      "public_key": "",
+      "private_key": "",
+      "summary": null,
+      "summary_updated": "2022-01-05T19:22:28Z",
+      "manually_approves_followers": false,
+      "owner": "a0ec5c4f-bac7-4e02-905e-73364d2e81e6"
+    }
+  },
+  {
+    "model": "federation.actor",
+    "pk": "boundcorp",
+    "fields": {
+      "created_at": "2022-01-05T19:20:42.846Z",
+      "updated_at": "2022-01-05T19:20:42.846Z",
+      "url": "/org/boundcorp",
+      "type": "Organization",
+      "display_name": "Bound Corp",
+      "username": "org",
+      "domain": "boundcorp.net",
+      "public_key": "",
+      "private_key": "",
+      "summary": null,
+      "summary_updated": "2022-01-05T19:19:57Z",
+      "manually_approves_followers": false,
+      "owner": "4ec20ad9-7ead-4206-99eb-4955e8601b69"
+    }
+  },
+  {
+    "model": "federation.actor",
+    "pk": "leeward",
+    "fields": {
+      "created_at": "2022-01-05T19:19:53.002Z",
+      "updated_at": "2022-01-05T19:19:53.002Z",
+      "url": "/user/leeward",
+      "type": "Person",
+      "display_name": "Leeward B",
+      "username": "leeward",
+      "domain": "boundcorp.net",
+      "public_key": "",
+      "private_key": "",
+      "summary": null,
+      "summary_updated": "2022-01-05T19:19:07Z",
+      "manually_approves_followers": false,
+      "owner": "4ec20ad9-7ead-4206-99eb-4955e8601b69"
+    }
+  },
+  {
+    "model": "federation.actor",
+    "pk": "leewardtv",
+    "fields": {
+      "created_at": "2022-01-05T19:21:12.456Z",
+      "updated_at": "2022-01-05T19:21:12.456Z",
+      "url": "/service/leewardtv",
+      "type": "Service",
+      "display_name": "LeewardTV",
+      "username": "leewardtv",
+      "domain": "boundcorp.net",
+      "public_key": "",
+      "private_key": "",
+      "summary": null,
+      "summary_updated": "2022-01-05T19:20:45Z",
+      "manually_approves_followers": false,
+      "owner": "4ec20ad9-7ead-4206-99eb-4955e8601b69"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "4ec20ad9-7ead-4206-99eb-4955e8601b69",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$OdhKRaX0AwiHZa0h8CGZt4$UO49DDlqzX5YW/oJrz37RQr9BnPyTN9ZmzWanZChh7U=",
+      "last_login": "2022-01-05T19:18:50.831Z",
+      "is_superuser": true,
+      "username": "leeward",
+      "first_name": "",
+      "last_name": "",
+      "email": "leeward@boundcorp.net",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-01-05T19:18:44.772Z",
+      "created_at": "2022-01-05T19:18:44.875Z",
+      "updated_at": "2022-01-05T19:18:44.875Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "a0ec5c4f-bac7-4e02-905e-73364d2e81e6",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$WXGlDDTGgPzegGwI4eSKq1$NF1qmJF87ap5HqFvxmh7YH6F3nqDnu9hQo1kUhyAHNQ=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "audrey",
+      "first_name": "",
+      "last_name": "",
+      "email": "audrey@boundcorp.net",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-01-05T19:22:49.691Z",
+      "created_at": "2022-01-05T19:22:49.792Z",
+      "updated_at": "2022-01-05T19:22:49.792Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
