@@ -28,7 +28,7 @@ FEDERATION_HOSTNAME = os.environ.get("FEDERATION_HOSTNAME", "localhost").lower()
 MANAGERS = ADMINS = [
     ("Lee Bailey", "l@lwb.co"),
 ]
-SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "noreply@"+FEDERATION_HOSTNAME)
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "noreply@" + FEDERATION_HOSTNAME)
 
 AUTH_USER_MODEL = "users.User"
 

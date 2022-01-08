@@ -25,6 +25,7 @@ def logged_in_client(client, create_test_user, strong_pass):
         client.login(username=test_user.username, password=strong_pass)
         return client, test_user
 
+
 @dataclass
 class FanoutFixture:
     domain: "fanout.apps.federation.models.Domain"
@@ -37,7 +38,8 @@ class FanoutFixture:
 @pytest.fixture
 def local_fanout(db, settings, logged_in_client):
     from fanout.apps.federation import models, factories
-    settings.FEDERATION_HOSTNAME = 'localhost'
+
+    settings.FEDERATION_HOSTNAME = "localhost"
     domain = models.Domain.LOCAL()
     actors = [factories.ActorFactory(domain=domain) for _ in range(5)]
     client, test_user = logged_in_client

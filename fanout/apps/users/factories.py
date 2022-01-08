@@ -24,6 +24,7 @@ class UserFactory(factory.django.DjangoModelFactory):
         if not create or not extracted:
             return
         from fanout.apps.users.models import create_actor
+
         self.actor = create_actor(self)
         self.save(update_fields=["actor"])
         return self.actor

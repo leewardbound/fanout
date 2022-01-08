@@ -15,21 +15,22 @@ class Activity(DjangoObjectType):
 
     def resolve_note(root, info):
         from fanout.apps.content.models import Note
+
         if isinstance(root.object, Note):
             return root.object
 
     def resolve_image(root, info):
         from fanout.apps.content.models import Image
+
         if isinstance(root.object, Image):
             return root.object
 
     class Meta:
         model = models.Activity
 
+
 class Queries(graphene.ObjectType):
     activities = graphene.List(Activity, actorId=graphene.ID(required=True))
 
     def resolve_activities(self, info, actorId):
-        return models.Activity.objects.filter(actor_id=actorId).prefetch_related(
-            'object'
-        )
+        return models.Activity.objects.filter(actor_id=actorId).prefetch_related("object")

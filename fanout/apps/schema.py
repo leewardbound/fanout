@@ -6,15 +6,15 @@ import fanout.apps.federation.schema.queries
 import fanout.apps.users.schema
 
 
-class Query(fanout.apps.federation.schema.queries.Queries,
-            fanout.apps.users.schema.Queries,
-            graphene.ObjectType):
+class Query(fanout.apps.federation.schema.queries.Queries, fanout.apps.users.schema.Queries, graphene.ObjectType):
     pass
 
 
-class Mutation(fanout.apps.customers.schema.mutations.Mutations,
-               fanout.apps.content.schema.mutations.Mutations,
-               graphene.ObjectType):
+class Mutation(
+    fanout.apps.customers.schema.mutations.Mutations,
+    fanout.apps.content.schema.mutations.Mutations,
+    graphene.ObjectType,
+):
     pass
 
 

@@ -28,7 +28,7 @@ class ObjectTypes(models.TextChoices):
 
 
 class ContentBase(ActivityPubObjectMixin, TimestampMixin):
-    actor = models.ForeignKey('federation.Actor', on_delete=models.CASCADE)
+    actor = models.ForeignKey("federation.Actor", on_delete=models.CASCADE)
 
     class Meta:
         abstract = True

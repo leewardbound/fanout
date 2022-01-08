@@ -23,8 +23,6 @@ def slugify_username(username):
     """
 
     value = str(username)
-    value = (
-        unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
-    )
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
     value = re.sub(r"[^\w\s-]", "", value).strip()
     return re.sub(r"[-\s]+", "_", value)

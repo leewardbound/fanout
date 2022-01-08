@@ -7,7 +7,8 @@ from fanout.apps.utils.models import TimestampMixin, from_choices
 
 
 class SettingsHandlers(models.TextChoices):
-    SYSTEM = 'fanout.apps.common.settings.SystemSettingsHandler', 'System Settings'
+    SYSTEM = "fanout.apps.common.settings.SystemSettingsHandler", "System Settings"
+
 
 class Settings(TimestampMixin):
     id = models.CharField(max_length=255, primary_key=True)
@@ -28,7 +29,8 @@ class Settings(TimestampMixin):
 
     @classmethod
     def SYSTEM(cls):
-        return cls.initialize('SYSTEM', SettingsHandlers.SYSTEM)
+        return cls.initialize("SYSTEM", SettingsHandlers.SYSTEM)
+
 
 @dataclass
 class SystemSettingsHandler:

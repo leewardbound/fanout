@@ -38,17 +38,14 @@ class SubscribeByEmail(graphene.Mutation):
         user = info.context.user
         if user.is_anonymous:
             user = None
-        datapoints = {
-            dp['key']: dp['value']
-            for dp in input['datapoints']
-        }
+        datapoints = {dp["key"]: dp["value"] for dp in input["datapoints"]}
         ip = get_client_ip(info.context.META)
         c = models.Customer.collect_customer(input["email"], user=user, ip=ip, datapoints=datapoints)
-        subscription, created = c.subscribe_to_actor(input['actorId'])
+        subscription, created = c.subscribe_to_actor(input["actorId"])
 
-        return SubscribeByEmail(email=input["email"],
-                                datapoints=[{'key': k, 'value': v} for k, v in datapoints.items()],
-                                created=created)
+        return SubscribeByEmail(
+            email=input["email"], datapoints=[{"key": k, "value": v} for k, v in datapoints.items()], created=created
+        )
 
 
 class Mutations(graphene.ObjectType):

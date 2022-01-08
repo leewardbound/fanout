@@ -8,6 +8,7 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = []
     search_fields = ["username", "email"]
 
+
 @admin.register(models.AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
-    list_display = ['created_at', 'type', 'performing_user', 'succeeded', 'target', 'extra_data']
+    list_display = ["created_at", "type", "performing_user", "succeeded", "target", "extra_data"]

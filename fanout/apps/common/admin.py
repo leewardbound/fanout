@@ -1,6 +1,7 @@
 from django.contrib.admin import register as initial_register, site, ModelAdmin  # noqa
 from django.db.models.fields.related import RelatedField
 
+
 def register(model):
     """
     To make the admin more performant, we ensure all the the relations

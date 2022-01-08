@@ -20,6 +20,7 @@ class ActivityPubObjectMixin(models.Model):
     @property
     def is_local(self):
         from .utils import is_local
+
         return is_local(self.id)
 
 
@@ -29,16 +30,13 @@ class Domain(TimestampMixin):
     name = models.CharField(unique=True, max_length=255)
     info = models.JSONField(max_length=50000, null=True, blank=True)
     info_updated = models.DateTimeField(null=True, blank=True)
-    service_actor = models.ForeignKey("Actor",
-                                      related_name="managed_domains",
-                                      on_delete=models.SET_NULL,
-                                      null=True,
-                                      blank=True)
+    service_actor = models.ForeignKey(
+        "Actor", related_name="managed_domains", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     @property
     def is_local(self):
         return self.name == settings.FEDERATION_HOSTNAME
-
 
     @classmethod
     def LOCAL(cls):
@@ -46,8 +44,8 @@ class Domain(TimestampMixin):
         if new:
             domain.service_actor = Actor.objects.create(
                 type=ActorTypes.SERVICE,
-                display_name='Local System',
-                username='system',
+                display_name="Local System",
+                username="system",
                 domain=domain,
             )
             domain.save()
@@ -55,18 +53,18 @@ class Domain(TimestampMixin):
 
 
 class ActorTypes(models.TextChoices):
-    PERSON = 'Person'
-    GROUP = 'Group'
-    ORGANIZATION = 'Organization', 'Organization or Company'
-    APPLICATION = 'Application'
-    SERVICE = 'Service'
+    PERSON = "Person"
+    GROUP = "Group"
+    ORGANIZATION = "Organization", "Organization or Company"
+    APPLICATION = "Application"
+    SERVICE = "Service"
 
 
 class Actor(ActivityPubObjectMixin, TimestampMixin):
     type = models.CharField(**from_choices(ActorTypes))
     display_name = models.CharField(max_length=512, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
-    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='actors')
+    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name="actors")
     public_key = models.TextField(max_length=5_000, null=True, blank=True)
     private_key = models.TextField(max_length=5_000, null=True, blank=True)
     summary = models.CharField(max_length=512, null=True, blank=True)
@@ -76,8 +74,9 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
     inbox_url = models.CharField(max_length=2048, null=True, blank=True)
     outbox_url = models.CharField(max_length=2048, null=True, blank=True)
 
-    owner = models.ForeignKey('users.User', on_delete=models.SET_NULL, related_name='owned_actors', null=True,
-                              blank=True)
+    owner = models.ForeignKey(
+        "users.User", on_delete=models.SET_NULL, related_name="owned_actors", null=True, blank=True
+    )
 
     @property
     def private_key_id(self):
@@ -123,12 +122,8 @@ class InboxItem(models.Model):
     Store activities binding to local actors, with read/unread status.
     """
 
-    actor = models.ForeignKey(
-        Actor, related_name="inbox_items", on_delete=models.CASCADE
-    )
-    activity = models.ForeignKey(
-        "Activity", related_name="inbox_items", on_delete=models.CASCADE
-    )
+    actor = models.ForeignKey(Actor, related_name="inbox_items", on_delete=models.CASCADE)
+    activity = models.ForeignKey("Activity", related_name="inbox_items", on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=[("to", "to"), ("cc", "cc")])
     is_read = models.BooleanField(default=False)
 
@@ -166,6 +161,4 @@ class Activity(ActivityPubObjectMixin, TimestampMixin):
         on_delete=models.SET_NULL,
         related_name="related_objecting_activities",
     )
-    related_object = GenericForeignKey(
-        "related_object_content_type", "related_object_id"
-    )
+    related_object = GenericForeignKey("related_object_content_type", "related_object_id")

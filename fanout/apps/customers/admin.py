@@ -4,7 +4,7 @@ from . import models
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['email', 'user', 'get_all_data']
+    list_display = ["email", "user", "get_all_data"]
 
 
 @admin.register(models.Subscription)

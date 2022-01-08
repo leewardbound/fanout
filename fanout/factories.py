@@ -1,5 +1,3 @@
-
-
 class NoUpdateOnCreate:
     """
     Factory boy calls save after the initial create. In most case, this
