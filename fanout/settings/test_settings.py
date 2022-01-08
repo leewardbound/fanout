@@ -9,8 +9,7 @@ if "TEST_USE_ENV" not in os.environ:
     os.environ["AWS_S3_BUCKET_NAME"] = ""
 
     del sys.modules["fanout.settings"]
-    del sys.modules["fanout.settings.base"]
-    del sys.modules["fanout.settings.defaults"]
+    del sys.modules["fanout.settings.project"]
 
 from fanout.settings import *
 

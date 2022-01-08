@@ -1,7 +1,7 @@
 [
   {
     "model": "federation.domain",
-    "pk": "boundcorp.net",
+    "name": "boundcorp.net",
     "fields": {
       "created_at": "2022-01-05T19:19:01.467Z",
       "updated_at": "2022-01-05T19:19:01.467Z",
@@ -11,7 +11,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "audrey",
+    "pk": "https://boundcorp.net/users/audrey",
     "fields": {
       "created_at": "2022-01-05T19:23:33.645Z",
       "updated_at": "2022-01-05T19:23:33.645Z",
@@ -30,7 +30,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "boundcorp",
+    "pk": "https://boundcorp.net/users/boundcorp",
     "fields": {
       "created_at": "2022-01-05T19:20:42.846Z",
       "updated_at": "2022-01-05T19:20:42.846Z",
@@ -49,7 +49,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "leeward",
+    "pk": "https://boundcorp.net/users/leeward",
     "fields": {
       "created_at": "2022-01-05T19:19:53.002Z",
       "updated_at": "2022-01-05T19:19:53.002Z",
@@ -68,7 +68,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "leewardtv",
+    "pk": "https://boundcorp.net/users/leewardtv",
     "fields": {
       "created_at": "2022-01-05T19:21:12.456Z",
       "updated_at": "2022-01-05T19:21:12.456Z",

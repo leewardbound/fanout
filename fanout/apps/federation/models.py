@@ -7,7 +7,7 @@ from django.db import models
 # which might have a remote URL
 from django.utils import timezone
 
-from fanout.apps.utils.models import TimestampMixin, from_choices, uuid4_string
+from fanout.apps.utils.models import TimestampMixin, from_choices, uuid4_string, UUIDMixin
 
 
 class ActivityPubObjectMixin(models.Model):
@@ -25,13 +25,33 @@ class ActivityPubObjectMixin(models.Model):
 
 # Remote domains
 class Domain(TimestampMixin):
-    name = models.CharField(primary_key=True, max_length=255)
+    id = models.CharField(primary_key=True, max_length=512, default=uuid4_string)
+    name = models.CharField(unique=True, max_length=255)
     info = models.JSONField(max_length=50000, null=True, blank=True)
     info_updated = models.DateTimeField(null=True, blank=True)
+    service_actor = models.ForeignKey("Actor",
+                                      related_name="managed_domains",
+                                      on_delete=models.SET_NULL,
+                                      null=True,
+                                      blank=True)
 
     @property
     def is_local(self):
         return self.name == settings.FEDERATION_HOSTNAME
+
+
+    @classmethod
+    def LOCAL(cls):
+        domain, new = cls.objects.get_or_create(name=settings.FEDERATION_HOSTNAME)
+        if new:
+            domain.service_actor = Actor.objects.create(
+                type=ActorTypes.SERVICE,
+                display_name='Local System',
+                username='system',
+                domain=domain,
+            )
+            domain.save()
+        return domain
 
 
 class ActorTypes(models.TextChoices):
@@ -47,11 +67,14 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
     display_name = models.CharField(max_length=512, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='actors')
-    public_key = models.TextField(max_length=5000, null=True, blank=True)
-    private_key = models.TextField(max_length=5000, null=True, blank=True)
+    public_key = models.TextField(max_length=5_000, null=True, blank=True)
+    private_key = models.TextField(max_length=5_000, null=True, blank=True)
     summary = models.CharField(max_length=512, null=True, blank=True)
     summary_updated = models.DateTimeField(default=timezone.now)
     manually_approves_followers = models.BooleanField(default=False)
+    followers_url = models.CharField(max_length=2048, null=True, blank=True)
+    inbox_url = models.CharField(max_length=2048, null=True, blank=True)
+    outbox_url = models.CharField(max_length=2048, null=True, blank=True)
 
     owner = models.ForeignKey('users.User', on_delete=models.SET_NULL, related_name='owned_actors', null=True,
                               blank=True)
@@ -61,7 +84,8 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
         return "{}#main-key".format(self.id)
 
     def __str__(self):
-        return "{}@{}".format(self.username, self.domain_id)
+        return "{}@{}".format(self.username, self.domain.name)
+
 
 class ActivityTypes(models.TextChoices):
     ACCEPT = "Accept"
@@ -93,6 +117,7 @@ class ActivityTypes(models.TextChoices):
     UPDATE = "Update"
     VIEW = "View"
 
+
 class InboxItem(models.Model):
     """
     Store activities binding to local actors, with read/unread status.
@@ -106,6 +131,7 @@ class InboxItem(models.Model):
     )
     type = models.CharField(max_length=10, choices=[("to", "to"), ("cc", "cc")])
     is_read = models.BooleanField(default=False)
+
 
 class Activity(ActivityPubObjectMixin, TimestampMixin):
     actor = models.ForeignKey(Actor, related_name="outbox_activities", on_delete=models.CASCADE)

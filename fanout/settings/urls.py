@@ -19,7 +19,7 @@ urlpatterns = [
     path("api/", include(api_router.urls)),
     path("mgmt/", admin.site.urls),
     path("healthz/", healthz),
-    path("graphql", GraphQLView.as_view(graphiql=True)),
+    path("graphql/", GraphQLView.as_view(graphiql=True)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

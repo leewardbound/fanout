@@ -3,6 +3,7 @@ from django.db import models
 from fanout.apps.federation.models import ActivityPubObjectMixin
 from fanout.apps.utils.models import TimestampMixin
 
+
 class ObjectTypes(models.TextChoices):
     APPLICATION = "Application"
     ARTICLE = "Article"
@@ -41,4 +42,9 @@ class FileContentBase(ContentBase):
 
 
 class Note(ContentBase):
+    type = ObjectTypes.NOTE
     content = models.TextField(max_length=50_000)
+
+
+class Image(FileContentBase):
+    type = ObjectTypes.IMAGE

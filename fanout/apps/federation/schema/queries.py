@@ -1,21 +1,26 @@
 import graphene
 from graphene_django import DjangoObjectType
-from fanout.apps.federation import models
-from fanout.apps.content import models as contentModels
 
-class Note(DjangoObjectType):
-    class Meta:
-        model = contentModels.Note
+from fanout.apps.content.schema.queries import Note, Image
+from fanout.apps.federation import models
+
 
 class Activity(DjangoObjectType):
     objectType = graphene.String()
     note = graphene.Field(Note)
+    image = graphene.Field(Image)
 
     def resolve_objectType(root, info):
         return root.object._meta.model_name
 
     def resolve_note(root, info):
-        if isinstance(root.object, contentModels.Note):
+        from fanout.apps.content.models import Note
+        if isinstance(root.object, Note):
+            return root.object
+
+    def resolve_image(root, info):
+        from fanout.apps.content.models import Image
+        if isinstance(root.object, Image):
             return root.object
 
     class Meta:

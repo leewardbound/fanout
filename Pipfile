@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 black = "==20.8b1"
+faker = "*"
 
 [packages]
 django = "~=3.2"
@@ -20,7 +21,6 @@ uritemplate = "*"
 django-rest-framework = "*"
 django-extensions = "*"
 django-filter = "*"
-django-rest-registration = "*"
 django-timezone-field = "*"
 psycopg2-binary = "*"
 uwsgi = "*"
@@ -43,6 +43,8 @@ autoflake = "*"
 pycurl = "*"
 graphene-django = "*"
 graphene-validator = "*"
+factory-boy = "*"
+cryptography = "*"
 
 [requires]
 python_version = "3.8"
