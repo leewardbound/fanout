@@ -1,0 +1,51 @@
+stages:
+  - backend
+  - test
+  - deploy
+
+build_backend:
+  stage: backend
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  services:
+    - docker:dind
+  needs:
+    - build_frontend
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - umount /var/run/secrets/kubernetes.io/serviceaccount || true
+    - /kaniko/executor --cache=true --cache-ttl=72h --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile.dev --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+
+test_backend:
+  stage: test
+  image:
+    name: $CI_REGISTRY_IMAGE
+  needs:
+    - build_backend
+  script:
+    - apt update -yq && apt install -yq  git
+    - /opt/venv/bin/pip install -r /app/requirements.dev.txt
+    - pytest
+
+deploy_prod:
+  stage: deploy
+  image: docker.netprophet.tech/netp/libs/docker-k8s-util:latest
+  needs:
+    - test_backend
+  script:
+    - kubectl config set-cluster "$CI_PROJECT_ID" --server="$KUBE_URL" --certificate-authority="$KUBE_CA_PEM_FILE"
+    - kubectl config set-credentials "$CI_PROJECT_ID" --token="$KUBE_TOKEN"
+    - kubectl config set-context "$CI_PROJECT_ID" --cluster="$CI_PROJECT_ID" --user="$CI_PROJECT_ID" --namespace="$KUBE_NAMESPACE"
+    - kubectl config use-context "$CI_PROJECT_ID"
+
+    - bin/k8s.deploy "$CI_COMMIT_SHA"
+  #when: manual
+  environment:
+    name: production
+    url: https://fanout.boundcorp.net
+  only:
+    - master
