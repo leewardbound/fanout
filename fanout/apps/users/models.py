@@ -5,7 +5,7 @@ from django.db import models
 
 from fanout.apps.federation import keys
 from fanout.apps.federation.utils import slugify_username
-from fanout.apps.utils.models import UUIDMixin, TimestampMixin
+from fanout.apps.utils.models import TimestampMixin, UUIDMixin
 
 
 class User(TimestampMixin, UUIDMixin, AbstractUser):

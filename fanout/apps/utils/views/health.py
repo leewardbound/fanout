@@ -1,7 +1,7 @@
+from django.db import connection
 from requests import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-from django.db import connection
 
 
 @api_view(["GET"])

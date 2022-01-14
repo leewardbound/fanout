@@ -7,7 +7,7 @@ from django.db import models
 # which might have a remote URL
 from django.utils import timezone
 
-from fanout.apps.utils.models import TimestampMixin, from_choices, uuid4_string, UUIDMixin
+from fanout.apps.utils.models import TimestampMixin, from_choices, uuid4_string
 
 
 class ActivityPubObjectMixin(models.Model):

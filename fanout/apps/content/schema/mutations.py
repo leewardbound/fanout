@@ -26,7 +26,7 @@ class CreateNote(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, input):
-        from fanout.apps.federation.models import Activity, Actor, ActivityTypes
+        from fanout.apps.federation.models import Activity, ActivityTypes, Actor
 
         user = info.context.user
         if user.is_anonymous:

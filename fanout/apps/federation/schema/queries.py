@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from fanout.apps.content.schema.queries import Note, Image
+from fanout.apps.content.schema.queries import Image, Note
 from fanout.apps.federation import models
 
 

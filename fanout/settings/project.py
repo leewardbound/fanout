@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+import os
+from typing import List
 from urllib.parse import urlparse
 
 import environ
 
 from fanout import constants
-import os
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -60,7 +61,12 @@ INSTALLED_APPS = [
 ]
 
 SITE_ROOT = PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
+
+def root(*x):
+    return os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
+
 PROJECT_MODULE = SITE_ROOT.split("/")[-1]
 
 SERVE_MEDIA = True
@@ -76,14 +82,14 @@ STATIC_ROOT = root("static", "assets")
 STATIC_URL = "/dj-static/assets/"
 
 # Where to collect ^above^ from:
-STATICFILES_DIRS = []
+STATICFILES_DIRS: List[str] = []
 
 # Where the admin stuff lives
 ADMIN_MEDIA_PREFIX = "/dj-static/assets/admin/"
 
 # django-mediagenerator search directories
 # files are defined in assets.py
-GLOBAL_MEDIA_DIRS = []
+GLOBAL_MEDIA_DIRS: List[str] = []
 
 TIME_ZONE = "UTC"
 LANGUAGE_CODE = "en-us"
@@ -178,7 +184,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-
 if DEBUG:
     MIDDLEWARE += [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -221,9 +226,7 @@ TEMPLATES = [
     },
 ]
 
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "*"]
 
@@ -257,23 +260,6 @@ if "REDIS_URL" in os.environ:
             },
         }
     }
-
-
-class DebugToolbarInternalIPs:
-    def __contains__(self, ip):
-        # Allow access from any IP for DEBUG=True
-        return DEBUG
-
-
-INTERNAL_IPS = DebugToolbarInternalIPs()
-
-DEBUG_TOOLBAR_CONFIG = {
-    # Toolbar options
-    # 'RESULTS_CACHE_SIZE': 3,
-    # 'SHOW_COLLAPSED': True,
-    # Panel options
-    "SQL_WARNING_THRESHOLD": 100,  # milliseconds
-}
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")

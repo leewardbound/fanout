@@ -3,8 +3,6 @@ import json
 import pytest
 from graphene_django.utils.testing import graphql_query
 
-from fanout.apps.common.tests import *
-from fanout.apps.content.schema.mutations import CreateNoteInput
 
 
 def q_author_activities(actorId):

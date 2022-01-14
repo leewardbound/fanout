@@ -49,6 +49,7 @@ graphene-django = "*"
 graphene-validator = "*"
 factory-boy = "*"
 cryptography = "*"
+django-stubs = "*"
 
 [requires]
 python_version = "3.8"

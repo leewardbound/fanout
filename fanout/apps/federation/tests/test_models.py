@@ -1,4 +1,3 @@
-from fanout.apps.common.tests import local_fanout
 from fanout.apps.federation import models
 from fanout.apps.federation.factories import ActorFactory
 

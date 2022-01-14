@@ -21,6 +21,12 @@ pullstaging:
 test:
 	bin/test
 
+mypy:
+	pipenv run mypy
+
+isort:
+	pipenv run isort fanout
+
 test_in_docker:
 	bin/djtest
 

@@ -4,7 +4,9 @@ from typing import List
 import django.conf
 import pytest
 
+from fanout.apps.federation.models import Actor, Domain
 from fanout.apps.users.factories import UserFactory
+from fanout.apps.users.models import User
 
 
 @pytest.fixture
@@ -28,16 +30,16 @@ def logged_in_client(client, create_test_user, strong_pass):
 
 @dataclass
 class FanoutFixture:
-    domain: "fanout.apps.federation.models.Domain"
-    other_actors: List["fanout.apps.federation.models.Actor"]
+    domain: Domain
+    other_actors: List[Actor]
     settings: django.conf.Settings
     client: django.test.client.Client
-    user: "fanout.apps.users.models.User"
+    user: User
 
 
 @pytest.fixture
 def local_fanout(db, settings, logged_in_client):
-    from fanout.apps.federation import models, factories
+    from fanout.apps.federation import factories, models
 
     settings.FEDERATION_HOSTNAME = "localhost"
     domain = models.Domain.LOCAL()

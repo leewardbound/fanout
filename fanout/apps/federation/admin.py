@@ -1,16 +1,18 @@
-from fanout.apps.common import admin
+from django.contrib.admin import ModelAdmin
+
+from fanout.apps.common.admin import register
+
 from . import models
 
 
-@admin.register(models.Domain)
-class DomainAdmin(admin.ModelAdmin):
+@register(models.Domain)
+class DomainAdmin(ModelAdmin):
     list_display = ["name", "created_at"]
-    list_filter = []
     search_fields = ["name"]
 
 
-@admin.register(models.Actor)
-class ActorAdmin(admin.ModelAdmin):
+@register(models.Actor)
+class ActorAdmin(ModelAdmin):
     list_display = [
         "id",
         "domain",

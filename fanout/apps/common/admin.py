@@ -1,4 +1,4 @@
-from django.contrib.admin import register as initial_register, site, ModelAdmin  # noqa
+from django.contrib.admin import register as initial_register  # noqa
 from django.db.models.fields.related import RelatedField
 
 

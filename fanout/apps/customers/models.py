@@ -3,7 +3,7 @@ from typing import Mapping
 from django.db import models
 
 from fanout.apps.common.auditlog import AuditLogType
-from fanout.apps.utils.models import UUIDMixin, TimestampMixin, AuditableMixin
+from fanout.apps.utils.models import AuditableMixin, TimestampMixin
 
 
 class Customer(AuditableMixin, TimestampMixin):
@@ -60,6 +60,8 @@ class Customer(AuditableMixin, TimestampMixin):
     def set_data(self, update: Mapping[str, str] = None, delete_missing=False):
         all_points = list(self.datapoints.all())
         updated = []
+        if not update:
+            return self.datapoints.delete()
         for datapoint in all_points:
             if datapoint.key not in update:
                 if delete_missing:
