@@ -4,8 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "==20.8b1"
+pre-commit = "*"
 faker = "*"
+black = "*"
+isort = "*"
+mypy = "*"
+flake8 = "*"
 
 [packages]
 django = "~=3.2"
@@ -48,3 +52,6 @@ cryptography = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
