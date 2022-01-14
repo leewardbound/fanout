@@ -10,8 +10,6 @@ build_backend:
     entrypoint: [""]
   services:
     - docker:dind
-  needs:
-    - build_frontend
   variables:
     DOCKER_HOST: tcp://localhost:2375
   script:
