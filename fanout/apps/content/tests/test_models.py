@@ -4,7 +4,6 @@ import pytest
 from graphene_django.utils.testing import graphql_query
 
 
-
 def q_author_activities(actorId):
     return (
         """

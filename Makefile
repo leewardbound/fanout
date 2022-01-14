@@ -21,6 +21,9 @@ pullstaging:
 test:
 	bin/test
 
+fix-file-ownership:
+	bin/fix-file-ownership
+
 mypy:
 	pipenv run mypy
 
