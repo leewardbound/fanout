@@ -3,6 +3,12 @@ stages:
   - test
   - deploy
 
+cache:
+  key: static-key-caches-across-builds-$CI_PROJECT_ID
+  paths:
+    - .venv
+
+
 build_backend:
   stage: backend
   image:
