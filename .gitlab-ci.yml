@@ -44,7 +44,7 @@ deploy_prod:
     - kubectl config set-context "$CI_PROJECT_ID" --cluster="$CI_PROJECT_ID" --user="$CI_PROJECT_ID" --namespace="$KUBE_NAMESPACE"
     - kubectl config use-context "$CI_PROJECT_ID"
 
-    - bin/k8s.deploy "$CI_COMMIT_SHA"
+    - NAMESPACE=fanout bin/k8s.deploy "$CI_COMMIT_SHA"
   #when: manual
   environment:
     name: production
