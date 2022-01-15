@@ -2,7 +2,6 @@
 set -e
 
 make fix-file-ownership
-make isort
 make format
 make autoflake
 make mypy

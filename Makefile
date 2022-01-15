@@ -30,6 +30,9 @@ mypy:
 isort:
 	pipenv run isort fanout
 
+flake8:
+	pipenv run flake8
+
 test_in_docker:
 	bin/djtest
 
