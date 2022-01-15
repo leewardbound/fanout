@@ -31,9 +31,7 @@ test_backend:
   needs:
     - build_backend
   script:
-    - apt update -yq && apt install -yq  git
-    - /opt/venv/bin/pipenv install
-    - pytest
+    - bin/test
 
 deploy_prod:
   stage: deploy
