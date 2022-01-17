@@ -51,6 +51,7 @@ factory-boy = "*"
 cryptography = "*"
 django-stubs = "*"
 daphne = "*"
+channels = "*"
 
 [requires]
 python_version = "3.8"
