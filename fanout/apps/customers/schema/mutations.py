@@ -1,6 +1,6 @@
 import graphene
 from graphene_validator.decorators import validated
-from graphene_validator.errors import ValidationError
+from graphene_validator.errors import InvalidEmailFormat
 
 from fanout.apps.customers import models
 from fanout.apps.customers.schema.queries import CustomerDataPoint
@@ -12,7 +12,6 @@ class CustomerDataPointInput(graphene.InputObjectType):
     value = graphene.String(required=True)
 
 
-@validated
 class SubscribeByEmailInput(graphene.InputObjectType):
     actorId = graphene.String(required=True)
     email = graphene.String(required=True)
@@ -21,10 +20,11 @@ class SubscribeByEmailInput(graphene.InputObjectType):
     @staticmethod
     def validate_email(email, info, **input):
         if "@" not in email:
-            raise ValidationError()
+            raise InvalidEmailFormat
         return email.strip()
 
 
+@validated
 class SubscribeByEmail(graphene.Mutation):
     class Arguments:
         input = SubscribeByEmailInput()
@@ -33,8 +33,7 @@ class SubscribeByEmail(graphene.Mutation):
     datapoints = graphene.List(CustomerDataPoint)
     created = graphene.Boolean()
 
-    @classmethod
-    def mutate(cls, root, info, input):
+    def mutate(self, info, input):
         user = info.context.user
         if user.is_anonymous:
             user = None
