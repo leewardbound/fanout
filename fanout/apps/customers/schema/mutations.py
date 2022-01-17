@@ -21,7 +21,7 @@ class SubscribeByEmailInput(graphene.InputObjectType):
 
     @staticmethod
     def validate_email(email, info, **input):
-        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 
         if not re.fullmatch(regex, email):
             raise InvalidEmailFormat
