@@ -52,6 +52,7 @@ cryptography = "*"
 django-stubs = "*"
 daphne = "*"
 channels = "*"
+django-cache = "*"
 
 [requires]
 python_version = "3.8"

@@ -15,6 +15,7 @@ ENVIRONMENT = os.environ.get("APP_ENV", constants.Environments.DEVELOPMENT).lowe
 BACKEND_PORT = int(os.environ.get("DEVELOP_BACKEND_PORT", 8000))
 DEBUG = os.environ.get("DEBUG", "") == "true"
 ROOT_URLCONF = "fanout.settings.urls"
+ASGI_APPLICATION = "fanout.settings.routing.application"
 
 GRAPHENE = {"SCHEMA": "fanout.apps.schema.application_schema"}  # Where your Graphene schema lives
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_object_actions",
+    "channels",
     "graphene_django",
     "storages",
     "rest_framework",
@@ -268,6 +270,13 @@ BROKER_URL = REDIS_URL
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = "django-cache"
 # CELERY_BEAT_SCHEDULE = {}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [(os.environ.get("ASGI_REDIS", "redis-master"), 6379)],},
+    },
+}
 
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
