@@ -50,6 +50,7 @@ graphene-validator = "*"
 factory-boy = "*"
 cryptography = "*"
 django-stubs = "*"
+daphne = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from datetime import timedelta
 from typing import List
 from urllib.parse import urlparse
 
@@ -240,26 +241,34 @@ else:
 
 APPEND_SLASH = True
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+
+REDIS_HOST = os.getenv("REDIS_HOST", "redis-master")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+# REDIS
+REDIS_URL = "redis://{host}:{port}/1".format(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+)
+
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "cache_table",
-        "OPTIONS": {
-            "MAX_ENTRIES": 50_000,
-        },
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "KEY_PREFIX": "example",
     }
 }
 
-if "REDIS_URL" in os.environ:
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": os.environ["REDIS_URL"],
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            },
-        }
-    }
+# CELERY
+BROKER_URL = REDIS_URL
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = "django-cache"
+# CELERY_BEAT_SCHEDULE = {}
+
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
