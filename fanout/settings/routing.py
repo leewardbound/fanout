@@ -4,6 +4,7 @@ from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 from django.urls import re_path
 
+
 class WebsocketConsumer(AsyncJsonWebsocketConsumer):
     ################################
     # Connect / Disconnect
@@ -19,10 +20,13 @@ class WebsocketConsumer(AsyncJsonWebsocketConsumer):
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
-
         # WebSocket chat handler
         "websocket": AuthMiddlewareStack(
-            URLRouter([re_path(r"ws/", WebsocketConsumer),])
-        )
+            URLRouter(
+                [
+                    re_path(r"ws/", WebsocketConsumer),
+                ]
+            )
+        ),
     }
 )

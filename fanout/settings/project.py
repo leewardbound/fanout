@@ -268,13 +268,14 @@ CACHES = {
 # CELERY
 BROKER_URL = REDIS_URL
 CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = "django-cache"
 # CELERY_BEAT_SCHEDULE = {}
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [(os.environ.get("ASGI_REDIS", "redis-master"), 6379)],},
+        "CONFIG": {
+            "hosts": [(os.environ.get("ASGI_REDIS", "redis-master"), 6379)],
+        },
     },
 }
 
