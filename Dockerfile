@@ -31,7 +31,7 @@ WORKDIR /app
 RUN PIPENV_VENV_IN_PROJECT=true pipenv install --deploy
 
 COPY fanout/ /app/fanout
-COPY manage.py wsgi.py /app/
+COPY manage.py wsgi.py asgi.py /app/
 
 # Needed for fixtures to run in e2e tests
 COPY fixtures/ /app/fixtures
