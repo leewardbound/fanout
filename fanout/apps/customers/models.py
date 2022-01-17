@@ -22,7 +22,7 @@ class Customer(AuditableMixin, TimestampMixin):
                 existing_by_user.set_data(datapoints)
                 existing_by_user.create_audit_log(
                     AuditLogType.CUSTOMER_UPDATED,
-                    "Found customer by user session",
+                    "Found customer by user session %s" % email,
                     performing_user=user,
                     extra_data={"ip": ip, **datapoints},
                 )
@@ -42,7 +42,7 @@ class Customer(AuditableMixin, TimestampMixin):
             existing_by_email.set_data(datapoints)
             existing_by_email.create_audit_log(
                 AuditLogType.CUSTOMER_UPDATED,
-                "Found customer by email address",
+                "Found customer by email address %s" % email,
                 performing_user=user,
                 extra_data={"ip": ip, **datapoints},
             )

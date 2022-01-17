@@ -1,17 +1,18 @@
 [
   {
     "model": "federation.domain",
-    "name": "boundcorp.net",
+    "pk": "fanout.boundcorp.net",
     "fields": {
       "created_at": "2022-01-05T19:19:01.467Z",
       "updated_at": "2022-01-05T19:19:01.467Z",
+      "name": "fanout.boundcorp.net",
       "info": null,
       "info_updated": null
     }
   },
   {
     "model": "federation.actor",
-    "pk": "https://boundcorp.net/users/audrey",
+    "pk": "https://fanout.boundcorp.net/user/audrey",
     "fields": {
       "created_at": "2022-01-05T19:23:33.645Z",
       "updated_at": "2022-01-05T19:23:33.645Z",
@@ -19,7 +20,7 @@
       "type": "Person",
       "display_name": "Audrey Bound",
       "username": "audrey",
-      "domain": "boundcorp.net",
+      "domain": "fanout.boundcorp.net",
       "public_key": "",
       "private_key": "",
       "summary": null,
@@ -30,7 +31,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "https://boundcorp.net/users/boundcorp",
+    "pk": "https://fanout.boundcorp.net/org/boundcorp",
     "fields": {
       "created_at": "2022-01-05T19:20:42.846Z",
       "updated_at": "2022-01-05T19:20:42.846Z",
@@ -38,7 +39,7 @@
       "type": "Organization",
       "display_name": "Bound Corp",
       "username": "org",
-      "domain": "boundcorp.net",
+      "domain": "fanout.boundcorp.net",
       "public_key": "",
       "private_key": "",
       "summary": null,
@@ -49,7 +50,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "https://boundcorp.net/users/leeward",
+    "pk": "https://fanout.boundcorp.net/user/leeward",
     "fields": {
       "created_at": "2022-01-05T19:19:53.002Z",
       "updated_at": "2022-01-05T19:19:53.002Z",
@@ -57,7 +58,7 @@
       "type": "Person",
       "display_name": "Leeward B",
       "username": "leeward",
-      "domain": "boundcorp.net",
+      "domain": "fanout.boundcorp.net",
       "public_key": "",
       "private_key": "",
       "summary": null,
@@ -68,7 +69,7 @@
   },
   {
     "model": "federation.actor",
-    "pk": "https://boundcorp.net/users/leewardtv",
+    "pk": "https://fanout.boundcorp.net/service/leewardtv",
     "fields": {
       "created_at": "2022-01-05T19:21:12.456Z",
       "updated_at": "2022-01-05T19:21:12.456Z",
@@ -76,7 +77,7 @@
       "type": "Service",
       "display_name": "LeewardTV",
       "username": "leewardtv",
-      "domain": "boundcorp.net",
+      "domain": "fanout.boundcorp.net",
       "public_key": "",
       "private_key": "",
       "summary": null,
