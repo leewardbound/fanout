@@ -1,6 +1,6 @@
 from django.db import models
 
-from fanout.apps.federation.models import ActivityPubObjectMixin, ActorTypes
+from fanout.apps.federation.models import ActivityPubObjectMixin
 from fanout.apps.utils.models import TimestampMixin
 
 

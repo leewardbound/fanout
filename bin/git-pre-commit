@@ -6,3 +6,5 @@ make format
 make autoflake
 make mypy
 make test
+
+git commit --no-verify -a --amend -C HEAD
