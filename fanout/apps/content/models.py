@@ -1,28 +1,34 @@
 from django.db import models
 
-from fanout.apps.federation.models import ActivityPubObjectMixin
+from fanout.apps.federation.models import ActivityPubObjectMixin, ActorTypes
 from fanout.apps.utils.models import TimestampMixin
 
 
+class BaseTypes(models.TextChoices):
+    OBJECT = "Object"
+    COLLECTION = "Collection"
+    ORDERED_COLLECTION = "OrderedCollection"
+
+
 class ObjectTypes(models.TextChoices):
+    # Actor Types
+    PERSON = "Person"
+    GROUP = "Group"
+    ORGANIZATION = "Organization", "Organization or Company"
     APPLICATION = "Application"
+    SERVICE = "Service"
+
+    # Content Types
     ARTICLE = "Article"
     AUDIO = "Audio"
-    COLLECTION = "Collection"
     DOCUMENT = "Document"
     EVENT = "Event"
-    GROUP = "Group"
     IMAGE = "Image"
     NOTE = "Note"
-    OBJECT = "Object"
-    ORDERED_COLLECTION = "OrderedCollection"
-    ORGANIZATION = "Organization"
     PAGE = "Page"
-    PERSON = "Person"
     PLACE = "Place"
     PROFILE = "Profile"
     RELATIONSHIP = "Relationship"
-    SERVICE = "Service"
     TOMBSTONE = "Tombstone"
     VIDEO = "Video"
 
