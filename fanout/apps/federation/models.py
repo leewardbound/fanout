@@ -61,7 +61,7 @@ class ActorTypes(models.TextChoices):
 
 
 class Actor(ActivityPubObjectMixin, TimestampMixin):
-    type = models.CharField(**from_choices(ActorTypes))
+    type = models.CharField(max_length=128)
     display_name = models.CharField(max_length=512, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name="actors")
@@ -77,6 +77,12 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
     owner = models.ForeignKey(
         "users.User", on_delete=models.SET_NULL, related_name="owned_actors", null=True, blank=True
     )
+
+    child_content_type = models.ForeignKey(
+        ContentType, related_name="actor", on_delete=models.CASCADE, db_index=True, null=True, blank=True
+    )
+    child_object_id = models.CharField(max_length=255, db_index=True, null=True, blank=True)
+    child = GenericForeignKey("child_content_type", "child_object_id")
 
     @property
     def private_key_id(self):

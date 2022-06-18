@@ -30,10 +30,10 @@ class ActorFactory(NoUpdateOnCreate, factory.django.DjangoModelFactory):
     summary = factory.Faker("paragraph")
     domain = factory.SubFactory(DomainFactory)
     type = factory.Iterator(ActorTypes)
-    id = factory.LazyAttribute(lambda o: "https://{}/users/{}".format(o.domain.name, o.username))
-    followers_url = factory.LazyAttribute(lambda o: "https://{}/users/{}followers".format(o.domain.name, o.username))
-    inbox_url = factory.LazyAttribute(lambda o: "https://{}/users/{}/inbox".format(o.domain.name, o.username))
-    outbox_url = factory.LazyAttribute(lambda o: "https://{}/users/{}/outbox".format(o.domain.name, o.username))
+    id = factory.LazyAttribute(lambda o: "https://{}/{}/{}".format(o.domain.name, o.type, o.username))
+    followers_url = factory.LazyAttribute(lambda o: "{}/followers".format(o.id))
+    inbox_url = factory.LazyAttribute(lambda o: "{}/inbox.json".format(o.id))
+    outbox_url = factory.LazyAttribute(lambda o: "{}/outbox.json".format(o.id))
 
     class Meta:
         model = models.Actor

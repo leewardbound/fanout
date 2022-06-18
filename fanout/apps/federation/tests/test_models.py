@@ -6,7 +6,7 @@ def test_actor_factory(local_fanout):
     actor = ActorFactory(domain=local_fanout.domain)
     assert actor.domain.name == "localhost"
     assert "https://localhost/" in actor.id
-    assert models.Actor.objects.count() == len(local_fanout.other_actors) + 2, "there should be N+1 actors"
+    assert models.Actor.objects.count() == len(local_fanout.other_actors) + 2, "there should be N+2 actors"
 
 
 def test_local_fanout_fixture(local_fanout):
