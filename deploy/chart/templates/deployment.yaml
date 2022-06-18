@@ -1,0 +1,105 @@
+{{- range list "backend" "queue-worker" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-%s" (include "common.names.fullname" $) . }}
+  labels:
+    app.kubernetes.io/component: "{{ . }}"
+spec:
+  {{ if eq . "queue-worker" -}}
+  replicas: {{ $.Values.worker.replicas }}
+  {{ else if eq . "backend" -}}
+  replicas: {{ $.Values.replicas }}
+  {{- else -}}
+  replicas: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: "{{ . }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: "{{ . }}"
+        app.kubernetes.io/version: "{{ $.Values.image.tag }}"
+    spec:
+      {{- if $.Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml $.Values.image.pullSecrets | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: true
+      {{ if eq . "queue-worker" -}}
+      priorityClassName: {{ $.Values.worker.priorityClassName }}
+      {{- else -}}
+      priorityClassName: {{ $.Values.priorityClassName }}
+      {{- end }}
+      containers:
+        - name: {{ $.Chart.Name }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: "{{ $.Values.image.pullPolicy }}"
+          {{ if eq . "backend" -}}
+          args: ["/entrypoint.sh", "/uwsgi.sh"]
+          {{ else if eq . "queue-worker" -}}
+          args: ["/entrypoint.sh", "python3", "manage.py", "qcluster"]
+          {{- else -}}
+          args: [{{ quote . }}]
+          {{- end }}
+          env:
+            - name: "SENTRY_RELEASE"
+              value: {{ $.Values.image.tag }}
+            - name: "SERVICE"
+              value: {{quote .}}
+            {{- range $k, $v := $.Values.env }}
+            - name: {{ quote $k }}
+              value: {{ quote $v }}
+            {{- end }}
+            {{- include "fanout.env" (dict "root" $ "values" $.Values.fanout) | indent 12 }}
+            {{- range $name, $val := $.Values.envValueFrom }}
+            - name: {{ $name }}
+              valueFrom:
+                {{- toYaml $val | nindent 16 }}
+            {{- end }}
+            {{- with $.Values.envFrom }}
+          envFrom:
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            {{- with $.Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if eq . "backend" }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+              {{- if eq . "backend" -}}
+              {{- if $.Values.livenessProbe.enabled }}
+                {{- with omit $.Values.livenessProbe "enabled" }}
+          livenessProbe:
+                  {{- toYaml . | nindent 12 }}
+                {{- end }}
+              {{- end }}
+              {{- if $.Values.readinessProbe.enabled  }}
+                {{- with omit $.Values.readinessProbe "enabled" }}
+          readinessProbe:
+                  {{- toYaml . | nindent 12 }}
+                {{- end }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- with index $.Values.resources . }}
+          resources:
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- with $.Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
