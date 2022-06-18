@@ -34,7 +34,7 @@ COPY fanout/ /app/fanout
 COPY manage.py wsgi.py asgi.py /app/
 
 # Needed for fixtures to run in e2e tests
-COPY fixtures/ /app/fixtures
+#COPY fixtures/ /app/fixtures
 
 RUN SECRET_KEY=_ignore_during_build_ pipenv run python manage.py collectstatic --no-input
 
@@ -61,7 +61,7 @@ FROM release as test
 
 # copy in test dependencies
 COPY pytest.ini pyproject.toml /app/
-COPY fixtures/ /app/fixtures
+#COPY fixtures/ /app/fixtures
 #
 #
 # This make release the default stage
