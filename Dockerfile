@@ -1,4 +1,4 @@
-ARG image_version=python:3.8.5-alpine3.12
+ARG image_version=python:3.9.5-alpine3.12
 
 
 #
