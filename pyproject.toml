@@ -5,7 +5,7 @@ description = "Federated social network"
 authors = [
     "Leeward Bound <leeward@boundcorp.net>"
 ]
-license = "MIT"
+license = {text = "MIT"}
 readme = "README.md"
 python = "^3.6"
 homepage = "https://github.com/leewardbound/fanout"
@@ -23,6 +23,10 @@ where = ["fanout"]
 include = ["*"]
 exclude = []
 namespaces = false
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 120
