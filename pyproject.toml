@@ -10,6 +10,9 @@ readme = "README.md"
 requires-python = ">=3.6"
 
 keywords = ["activitypub", "fediverse", "federated", "social"]
+dependencies = [
+    "django ~= 3.2"
+]
 
 classifiers = [
     "Topic :: Software Development"
