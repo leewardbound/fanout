@@ -8,9 +8,6 @@ authors = [
 license = {text = "MIT"}
 readme = "README.md"
 python = "^3.6"
-homepage = "https://github.com/leewardbound/fanout"
-repository = "https://github.com/leewardbound/fanout"
-documentation = "https://github.com/leewardbound/fanout"
 
 keywords = ["activitypub", "fediverse", "federated", "social"]
 
