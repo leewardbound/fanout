@@ -1,13 +1,12 @@
 [project]
 name = "fanout"
-version = "0.1.0"
 description = "Federated social network"
 authors = [
     {name = "Leeward Bound", email= "leeward@boundcorp.net"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
-python = "^3.6"
+requires-python = ">=3.6"
 
 keywords = ["activitypub", "fediverse", "federated", "social"]
 
