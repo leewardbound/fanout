@@ -19,10 +19,8 @@ classifiers = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["fanout"]
-include = ["*"]
+include = ["fanout"]
 exclude = ["*.tests"]
-namespaces = false
 
 [build-system]
 requires = ["setuptools"]
