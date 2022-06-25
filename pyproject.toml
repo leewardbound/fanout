@@ -3,7 +3,7 @@ name = "fanout"
 version = "0.1.0"
 description = "Federated social network"
 authors = [
-    "Leeward Bound <leeward@boundcorp.net>"
+    {name = "Leeward Bound", email= "leeward@boundcorp.net"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
