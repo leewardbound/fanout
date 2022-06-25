@@ -1,5 +1,6 @@
 [project]
 name = "fanout"
+version = "0.1.0"
 description = "Federated social network"
 authors = [
     {name = "Leeward Bound", email= "leeward@boundcorp.net"}
