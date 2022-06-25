@@ -1,3 +1,23 @@
+[project]
+name = "fanout"
+version = "0.1.0"
+description = "Federated social network"
+authors = [
+    "Leeward Bound <leeward@boundcorp.net>"
+]
+license = "MIT"
+readme = "README.md"
+python = "^3.6"
+homepage = "https://github.com/leewardbound/fanout"
+repository = "https://github.com/leewardbound/fanout"
+documentation = "https://github.com/leewardbound/fanout"
+
+keywords = ["activitypub", "fediverse", "federated", "social"]
+
+classifiers = [
+    "Topic :: Software Development"
+]
+
 [tool.setuptools.packages.find]
 where = ["fanout"]
 include = ["*"]
