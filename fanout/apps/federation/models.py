@@ -7,6 +7,8 @@ from django.db import models
 # which might have a remote URL
 from django.utils import timezone
 
+from fanout.apps.federation import keys
+from fanout.apps.federation.utils import slugify_username
 from fanout.apps.utils.models import TimestampMixin, from_choices, uuid4_string
 
 
@@ -90,6 +92,28 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
 
     def __str__(self):
         return "{}@{}".format(self.username, self.domain.name)
+
+
+def build_actor_data(username, **kwargs):
+    slugified_username = slugify_username(username)
+    domain = kwargs.get("domain")
+
+    private, public = keys.get_key_pair()
+
+    if not domain:
+        domain = Domain.LOCAL()
+
+    return {
+        "preferred_username": slugified_username,
+        "domain": domain,
+        "type": "Person",
+        "name": kwargs.get("name", username),
+        "summary": kwargs.get("summary"),
+        "manually_approves_followers": False,
+        "private_key": private.decode("utf-8"),
+        "public_key": public.decode("utf-8"),
+        "id": "https://%s/users/%s" % (domain.name, slugified_username),
+    }
 
 
 class ActivityTypes(models.TextChoices):

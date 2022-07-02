@@ -3,8 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from fanout.apps.federation import keys
-from fanout.apps.federation.utils import slugify_username
+from fanout.apps.federation.models import build_actor_data
 from fanout.apps.utils.models import TimestampMixin, UUIDMixin
 
 
@@ -31,30 +30,9 @@ class AuditLog(TimestampMixin, UUIDMixin):
     target = GenericForeignKey("target_content_type", "target_id")
 
 
-def build_actor_data(username, **kwargs):
-    slugified_username = slugify_username(username)
-    domain = kwargs.get("domain")
-    if not domain:
-        from fanout.apps.federation.models import Domain
-
-        domain = Domain.LOCAL()
-    return {
-        "preferred_username": slugified_username,
-        "domain": domain,
-        "type": "Person",
-        "name": kwargs.get("name", username),
-        "summary": kwargs.get("summary"),
-        "manually_approves_followers": False,
-        "id": "https://%s/users/%s" % (domain.name, slugified_username),
-    }
-
-
-def create_actor(user, **kwargs):
+def create_actor_for_user(user, **kwargs):
     args = build_actor_data(user.username)
     args.update(kwargs)
-    private, public = keys.get_key_pair()
-    args["private_key"] = private.decode("utf-8")
-    args["public_key"] = public.decode("utf-8")
 
     from fanout.apps.federation.models import Actor
 
