@@ -75,6 +75,8 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
     followers_url = models.CharField(max_length=2048, null=True, blank=True)
     inbox_url = models.CharField(max_length=2048, null=True, blank=True)
     outbox_url = models.CharField(max_length=2048, null=True, blank=True)
+    profile_url = models.CharField(max_length=2048, null=True, blank=True)
+    icon_url = models.CharField(max_length=2048, null=True, blank=True)
 
     owner = models.ForeignKey(
         "users.User", on_delete=models.SET_NULL, related_name="owned_actors", null=True, blank=True
@@ -103,6 +105,8 @@ def build_actor_data(username, **kwargs):
     if not domain:
         domain = Domain.LOCAL()
 
+    _type = kwargs.get("type", "Person")
+
     return {
         "preferred_username": slugified_username,
         "domain": domain,
@@ -112,7 +116,7 @@ def build_actor_data(username, **kwargs):
         "manually_approves_followers": False,
         "private_key": private.decode("utf-8"),
         "public_key": public.decode("utf-8"),
-        "id": "https://%s/users/%s" % (domain.name, slugified_username),
+        "id": "https://%s/%s/%s" % (domain.name, kwargs.get("url_prefix", _type.lower()), slugified_username),
     }
 
 
