@@ -17,6 +17,8 @@ DEBUG = os.environ.get("DEBUG", "") == "true"
 ROOT_URLCONF = "fanout.settings.urls"
 ASGI_APPLICATION = "fanout.settings.routing.application"
 
+RSA_KEY_SIZE = 2048
+
 GRAPHENE = {"SCHEMA": "fanout.apps.schema.application_schema"}  # Where your Graphene schema lives
 
 DATABASES = {

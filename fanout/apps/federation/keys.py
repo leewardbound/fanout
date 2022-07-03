@@ -10,7 +10,7 @@ KEY_ID_REGEX = re.compile(r"keyId=\"(?P<id>.*)\"")
 
 
 def get_key_pair(size=None):
-    size = size or settings.RSA_KEY_SIZE
+    size = size or getattr(settings, "RSA_KEY_SIZE", 2048)
     key = rsa.generate_private_key(backend=crypto_default_backend(), public_exponent=65537, key_size=size)
     private_key = key.private_bytes(
         crypto_serialization.Encoding.PEM,

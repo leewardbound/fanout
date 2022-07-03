@@ -108,10 +108,10 @@ def build_actor_data(username, **kwargs):
     _type = kwargs.get("type", "Person")
 
     return {
-        "preferred_username": slugified_username,
+        "username": slugified_username,
         "domain": domain,
         "type": "Person",
-        "name": kwargs.get("name", username),
+        "display_name": kwargs.get("name", username),
         "summary": kwargs.get("summary"),
         "manually_approves_followers": False,
         "private_key": private.decode("utf-8"),
