@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
-
+from django.contrib.gis.db import models
 # Federated object data includes records created by other services
 # which might have a remote URL
 from django.utils import timezone
@@ -12,9 +11,15 @@ from fanout.apps.federation.utils import slugify_username
 from fanout.apps.utils.models import TimestampMixin, from_choices, uuid4_string
 
 
+def activitypub_id_generator(url_prefix, domain=None):
+    if not domain:
+        domain = Domain.LOCAL()
+
+    return lambda identifier=None: f"https://{domain.name}/{url_prefix}/{identifier or uuid4_string()}".lower()
+
+
 class ActivityPubObjectMixin(models.Model):
     id = models.CharField(primary_key=True, max_length=512, default=uuid4_string)
-    url = models.CharField(max_length=1024, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -33,7 +38,7 @@ class Domain(TimestampMixin):
     info = models.JSONField(max_length=50000, null=True, blank=True)
     info_updated = models.DateTimeField(null=True, blank=True)
     service_actor = models.ForeignKey(
-        "Actor", related_name="managed_domains", on_delete=models.SET_NULL, null=True, blank=True
+        "federation.Actor", related_name="managed_domains", on_delete=models.SET_NULL, null=True, blank=True
     )
 
     @property
@@ -63,6 +68,7 @@ class ActorTypes(models.TextChoices):
 
 
 class Actor(ActivityPubObjectMixin, TimestampMixin):
+    id = models.CharField(primary_key=True, max_length=512, default=activitypub_id_generator("Actor"))
     type = models.CharField(max_length=128)
     display_name = models.CharField(max_length=512, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
@@ -82,12 +88,6 @@ class Actor(ActivityPubObjectMixin, TimestampMixin):
         "users.User", on_delete=models.SET_NULL, related_name="owned_actors", null=True, blank=True
     )
 
-    child_content_type = models.ForeignKey(
-        ContentType, related_name="actor", on_delete=models.CASCADE, db_index=True, null=True, blank=True
-    )
-    child_object_id = models.CharField(max_length=255, db_index=True, null=True, blank=True)
-    child = GenericForeignKey("child_content_type", "child_object_id")
-
     @property
     def private_key_id(self):
         return "{}#main-key".format(self.id)
@@ -105,22 +105,26 @@ def build_actor_data(username, **kwargs):
     if not domain:
         domain = Domain.LOCAL()
 
-    _type = kwargs.get("type", "Person")
+    _type = kwargs.get("type", ActorTypes.PERSON)
 
     return {
         "username": slugified_username,
         "domain": domain,
-        "type": "Person",
+        "type": _type,
         "display_name": kwargs.get("name", username),
         "summary": kwargs.get("summary"),
         "manually_approves_followers": False,
         "private_key": private.decode("utf-8"),
         "public_key": public.decode("utf-8"),
-        "id": "https://%s/%s/%s" % (domain.name, kwargs.get("url_prefix", _type.lower()), slugified_username),
+        "id": activitypub_id_generator(url_prefix=f"p/")(slugified_username),
     }
 
 
-class ActivityTypes(models.TextChoices):
+# A subset of Activity Verbs from
+# https://github.com/activitystreams/activity-schema/blob/master/activity-schema.md
+# This abridged list is for python typing convenience, it is never used to restrict
+# activities you might choose to create in your application
+class ActivityVerbs(models.TextChoices):
     ACCEPT = "Accept"
     ADD = "Add"
     ANNOUNCE = "Announce"
@@ -143,6 +147,7 @@ class ActivityTypes(models.TextChoices):
     REJECT = "Reject"
     READ = "Read"
     REMOVE = "Remove"
+    SHARE = "Share"
     TENTATIVE_REJECT = "TentativeReject"
     TENTATIVE_ACCEPT = "TentativeAccept"
     TRAVEL = "Travel"
@@ -162,9 +167,10 @@ class InboxItem(models.Model):
     is_read = models.BooleanField(default=False)
 
 
+# An Activity
 class Activity(ActivityPubObjectMixin, TimestampMixin):
     actor = models.ForeignKey(Actor, related_name="outbox_activities", on_delete=models.CASCADE)
-    type = models.CharField(**from_choices(ActivityTypes))
+    verb = models.CharField(**from_choices(ActivityVerbs))
     recipients = models.ManyToManyField(Actor, related_name="inbox_activities", through=InboxItem)
     payload = models.JSONField(null=True, blank=True)
 
