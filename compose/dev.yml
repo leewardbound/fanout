@@ -12,6 +12,19 @@ services:
     volumes:
       - /data/${CI_PROJECT_TITLE}/postgresql:/var/lib/postgresql
 
+  minio:
+    extends:
+      service: minio-with-buckets
+      file: build.yml
+    environment:
+      MINIO_ROOT_USER: 12312345
+      MINIO_ROOT_PASSWORD: 12312345
+      MINIO_BUCKET: "fanout-assets"
+    ports: ["9000:9000", "9001:9001"]
+    command: minio server /data --console-address ":9001"
+    volumes:
+      - /data/${CI_PROJECT_TITLE}/minio:/data
+
   django_shell: # This is a one-shot command runner service, for manage.py or bash, it dies immediately
     extends:
       service: ${CI_PROJECT_TITLE}-django-dev
@@ -22,6 +35,7 @@ services:
       - ../.pythonhist:/root/.pythonhist
     links:
       - psql
+      - minio
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
@@ -44,6 +58,7 @@ services:
       - "$DEVELOP_BACKEND_PORT:8000"
     links:
       - psql
+      - minio
     volumes:
       - ../:/app
     environment:

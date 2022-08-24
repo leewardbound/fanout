@@ -1,15 +1,20 @@
-from django.contrib.admin import ModelAdmin
+from django.contrib.admin import ModelAdmin, display
+from django.utils.safestring import mark_safe
 
-from fanout.apps.common import admin
+from fanout.apps.common.admin import register
 
 from . import models
 
 
-@admin.register(models.Customer)
+@register(models.Customer)
 class CustomerAdmin(ModelAdmin):
-    list_display = ["email", "user", "get_all_data"]
+    @display()
+    def customer_data(self, obj):
+        return mark_safe("<br />".join(f"<b>{k}</b>: {v}" for k, v in obj.get_all_data().items()))
+
+    list_display = ["created_at", "email", "related_user", "customer_data"]
 
 
-@admin.register(models.Subscription)
+@register(models.Subscription)
 class ActorAdmin(ModelAdmin):
     pass

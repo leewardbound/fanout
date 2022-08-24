@@ -10,12 +10,13 @@ black = "*"
 isort = "*"
 mypy = "*"
 flake8 = "*"
+autoflake = "*"
 
 [packages]
 django = "~=3.2"
 django-environ = "*"
 django-cors-headers = "*"
-django-storages = "*"
+django-minio-storage = "*"
 django-memoize = "*"
 django-debug-toolbar = "*"
 requests = "*"
@@ -52,6 +53,7 @@ cryptography = "*"
 django-stubs = "*"
 daphne = "*"
 channels = "*"
+tzdata = "*"
 
 [requires]
 python_version = "3.8"

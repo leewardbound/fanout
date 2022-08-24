@@ -1,5 +1,9 @@
 version: "2.1"
 services:
+  minio-with-buckets:
+    build:
+      context: ./minio
+    image: minio-with-buckets
   fanout-django-dev:
     build:
       context: ../

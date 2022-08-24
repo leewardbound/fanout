@@ -9,7 +9,7 @@ def q_author_activities(actorId):
         """
     query {
         activities(actorId: "%s") {
-          id, type
+          id, objectType, verb
         }
     }
     """
@@ -35,13 +35,15 @@ def test_create_note(local_fanout, client_query):
     response = client_query(
         """mutation createNote($input: CreateNoteInput!) {
         createNote(input: $input) {
-            activity { type id }
+            activity { objectType id verb }
         }
     }""",
         input_data={"actorId": author.id, "content": author.summary},
     ).json()
+    print(response)
 
-    assert response["data"]["createNote"]["activity"]["type"] == "CREATE"
+    assert response["data"]["createNote"]["activity"]["verb"] == "CREATE"
+    assert response["data"]["createNote"]["activity"]["objectType"] == "note"
 
     response = client_query(q_author_activities(author.id)).json()
     assert len(response["data"]["activities"]) == 1

@@ -40,8 +40,8 @@ class AuditableMixin(UUIDMixin):
         abstract = True
 
 
-def from_choices(c):
-    return {"choices": c.choices, "max_length": max([len(x) for x in c]), "default": c.choices[0]}
+def from_choices(c, max_length=None):
+    return {"choices": c.choices, "max_length": max_length or max([len(x) for x in c]), "default": c.choices[0]}
 
 
 def get_client_ip(META):

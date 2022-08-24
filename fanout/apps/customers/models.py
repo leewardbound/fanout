@@ -8,14 +8,16 @@ from fanout.apps.utils.models import AuditableMixin, TimestampMixin
 
 class Customer(AuditableMixin, TimestampMixin):
     email = models.EmailField(null=True, blank=True)
-    user = models.OneToOneField("users.User", null=True, blank=True, on_delete=models.SET_NULL, related_name="customer")
+    related_user = models.OneToOneField(
+        "users.User", null=True, blank=True, on_delete=models.SET_NULL, related_name="related_customer"
+    )
 
     @classmethod
     def collect_customer(cls, email, user=None, ip=None, datapoints: Mapping[str, str] = None):
         datapoints = datapoints or {}
         if user:
             try:
-                existing_by_user = cls.objects.get(user=user)
+                existing_by_user = cls.objects.get(related_user=user)
                 if email and existing_by_user.email != email:
                     existing_by_user.email = email
                     existing_by_user.save()
@@ -31,12 +33,12 @@ class Customer(AuditableMixin, TimestampMixin):
                 pass
 
         try:
-            existing_by_email = cls.objects.filter(email=email, user=user).first()
+            existing_by_email = cls.objects.filter(email=email, related_user=user).first()
             if not existing_by_email:
                 raise cls.DoesNotExist
 
             if user:
-                existing_by_email.user = user
+                existing_by_email.related_user = user
                 existing_by_email.save()
 
             existing_by_email.set_data(datapoints)
@@ -50,7 +52,7 @@ class Customer(AuditableMixin, TimestampMixin):
         except cls.DoesNotExist:
             pass
 
-        customer = Customer.objects.create(email=email, user=user)
+        customer = Customer.objects.create(email=email, related_user=user)
         customer.set_data(datapoints)
         customer.create_audit_log(
             AuditLogType.CUSTOMER_CREATED, performing_user=user, extra_data={"ip": ip, **datapoints}
@@ -77,7 +79,7 @@ class Customer(AuditableMixin, TimestampMixin):
     def get_all_data(self):
         return {point.key: point.value for point in self.datapoints.all()}
 
-    def subscribe_to_actor(self, actor_id):
+    def subscribe_to_actor(self, actor_id, performing_user=None):
         from fanout.apps.federation.models import Actor
 
         actor = Actor.objects.get(id=actor_id)
@@ -87,12 +89,14 @@ class Customer(AuditableMixin, TimestampMixin):
         else:
             audit_log_type = AuditLogType.SUBSCRIPTION_UPDATED
 
-        sub.create_audit_log(audit_log_type, performing_user=self.user, extra_data=self.get_all_data())
+        sub.create_audit_log(
+            audit_log_type, performing_user=performing_user or self.related_user, extra_data=self.get_all_data()
+        )
 
         return sub, created
 
     def __str__(self):
-        return self.email or self.user
+        return self.email or self.related_user
 
 
 class FollowOptions(models.TextChoices):

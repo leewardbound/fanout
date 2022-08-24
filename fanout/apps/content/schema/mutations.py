@@ -26,14 +26,14 @@ class CreateNote(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, input):
-        from fanout.apps.federation.models import Activity, ActivityTypes, Actor
+        from fanout.apps.federation.models import Activity, ActivityVerbs, Actor
 
         user = info.context.user
         if user.is_anonymous:
             raise Exception("Not Authenticated")
         actor = Actor.objects.get(pk=input["actorId"])
         note = actor.note_set.create(content=input["content"])
-        activity = Activity.objects.create(actor=actor, object=note, type=ActivityTypes.CREATE)
+        activity = Activity.objects.create(actor=actor, object=note, verb=ActivityVerbs.CREATE)
 
         return CreateNote(activity=activity)
 

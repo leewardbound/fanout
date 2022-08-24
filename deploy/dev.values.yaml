@@ -1,0 +1,22 @@
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+  labels: {}
+  tls:
+    - hosts:
+        - "fanout.localhost"
+      secretName: "tls-fanout"
+  hostname: "fanout.localhost"
+
+env:
+  APP_ENV: "dev"
+  BASE_URL: https://fanout.localhost
+  SECRET_KEY: "uGKljbeviWBFO7CFR6MxmqPrDtX80S4p"
+  SERVER_EMAIL: "noreply@fanout.localhost"
+
+readinessProbe:
+  enabled: true
+livenessProbe:
+  enabled: true

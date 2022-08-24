@@ -14,7 +14,11 @@ ENV PYTHONUNBUFFERED=1
 # https://stackoverflow.com/questions/60588431/psycopg2-import-error-ssl-check-private-key-symbol-not-found
 ENV LD_PRELOAD=/lib/libssl.so.1.1
 
-RUN apk add --no-cache libpq libjpeg libcurl bash libxml2-dev libxslt-dev curl-dev build-base
+RUN apk add --no-cache libpq libjpeg libcurl bash libxml2-dev libxslt-dev curl-dev build-base \
+     binutils proj gdal geos postgresql-libs gdal-dev
+
+RUN ln -s /usr/lib/libproj.so.19 /usr/lib/libproj.so \
+    && ln -s /usr/lib/libgeos_c.so.1 /usr/lib/libgeos_c.so
 
 
 #
@@ -22,7 +26,9 @@ RUN apk add --no-cache libpq libjpeg libcurl bash libxml2-dev libxslt-dev curl-d
 # Builder stage
 FROM base as builder
 
-RUN apk add --no-cache zlib-dev jpeg-dev gcc python3-dev musl-dev postgresql-dev linux-headers build-base libcurl curl-dev libressl-dev libxml2-dev libxslt-dev libffi-dev openssl
+RUN apk add --no-cache zlib-dev jpeg-dev gcc  \
+    python3-dev musl-dev postgresql-dev linux-headers build-base libcurl curl-dev \
+    libressl-dev libxml2-dev libxslt-dev libffi-dev openssl
 
 RUN pip install --no-cache-dir --upgrade pipenv pip
 COPY Pipfile Pipfile.lock /app/

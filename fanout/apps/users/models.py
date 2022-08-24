@@ -7,8 +7,23 @@ from fanout.apps.federation.models import build_actor_data
 from fanout.apps.utils.models import TimestampMixin, UUIDMixin
 
 
+def get_library_path(instance, fn):
+    owner_id = instance.library.id
+    return f"media/{owner_id}/{fn}"
+
+
 class User(TimestampMixin, UUIDMixin, AbstractUser):
     pass
+
+
+class MediaLibrary(TimestampMixin, UUIDMixin):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class MediaLibraryFile(TimestampMixin, UUIDMixin):
+    library = models.ForeignKey(MediaLibrary, on_delete=models.CASCADE)
+    path = models.CharField(max_length=1024)
+    file = models.FileField("File", upload_to=get_library_path, null=True, blank=True)
 
 
 class AuditLog(TimestampMixin, UUIDMixin):

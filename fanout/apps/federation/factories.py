@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from fanout.apps.federation import models
-from fanout.apps.federation.models import ActorTypes
+from fanout.apps.federation.models import ActorTypes, actor_id_generator
 from fanout.factories import NoUpdateOnCreate
 
 
@@ -30,7 +30,7 @@ class ActorFactory(NoUpdateOnCreate, factory.django.DjangoModelFactory):
     summary = factory.Faker("paragraph")
     domain = factory.SubFactory(DomainFactory)
     type = factory.Iterator(ActorTypes)
-    id = factory.LazyAttribute(lambda o: "https://{}/{}/{}".format(o.domain.name, o.type, o.username))
+    id = factory.LazyAttribute(lambda o: actor_id_generator(o.username, domain=o.domain.name))
     followers_url = factory.LazyAttribute(lambda o: "{}/followers".format(o.id))
     inbox_url = factory.LazyAttribute(lambda o: "{}/inbox.json".format(o.id))
     outbox_url = factory.LazyAttribute(lambda o: "{}/outbox.json".format(o.id))
@@ -44,5 +44,5 @@ class ActorFactory(NoUpdateOnCreate, factory.django.DjangoModelFactory):
             return
 
         self.domain = models.Domain.objects.get_or_create(name=settings.FEDERATION_HOSTNAME)[0]
-        self.id = "https://{}/actors/{}".format(self.domain, self.username)
+        self.id = actor_id_generator(self.username)
         self.save(update_fields=["domain", "id"])

@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "django_object_actions",
     "channels",
     "graphene_django",
-    "storages",
+    "minio_storage",
     "rest_framework",
     "django_filters",
     "django_extensions",
@@ -282,15 +282,30 @@ CHANNEL_LAYERS = {
 }
 
 
+# OUTDATED
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_S3_BUCKET_NAME", "")
 AWS_DEFAULT_ACL = "private"
 AWS_S3_FILE_OVERWRITE = False
 
-if AWS_STORAGE_BUCKET_NAME:
-    DEFAULT_FILE_STORAGE = "fanout.apps.utils.s3storages.S3PrivateStorage"
-    THUMBNAIL_STORAGE = "fanout.apps.utils.s3storages.S3PublicStorage"
+
+def env_variable_truthy(key, default=""):
+    return os.environ.get(key, default).lower().strip() in ["1", "true", "t", "y"]
+
+
+# NEW FANOUT MEDIA
+MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT", "minio:9000")
+MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY", "12312345")
+MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY", "12312345")
+MINIO_STORAGE_MEDIA_BUCKET_NAME = os.environ.get("MINIO_STORAGE_MEDIA_BUCKET_NAME", "fanout-media")
+MINIO_STORAGE_USE_HTTPS = env_variable_truthy("MINIO_STORAGE_USE_HTTPS")
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_MEDIA_URL = os.environ.get("MINIO_STORAGE_MEDIA_URL", "http://localhost:9000/fanout-media")
+MINIO_STORAGE_MEDIA_USE_PRESIGNED = env_variable_truthy("MINIO_STORAGE_USE_PRESIGNED", "true")
+
+DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+THUMBNAIL_STORAGE = DEFAULT_FILE_STORAGE
 
 if "REDIS_URL" in os.environ:
     redis_url = urlparse(os.environ["REDIS_URL"])
