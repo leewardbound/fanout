@@ -2,5 +2,3 @@
 set -e
 
 make --no-print-directory precommit
-
-git commit --no-verify -a --amend -C HEAD
