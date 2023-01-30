@@ -1,0 +1,13 @@
+---
+apiVersion: v2
+description: fanout Helm Chart
+name: fanout
+version: 1.0.0
+appVersion: 1.0.0
+maintainers:
+  - name: Leeward Bound
+    email: leeward@boundcorp.net
+dependencies:
+  - name: common
+    version: 1.x.x
+    repository: https://charts.bitnami.com/bitnami
