@@ -12,7 +12,65 @@ export type Scalars = {
   DateTime: any;
   ExpectedErrorType: any;
   GenericScalar: any;
+  JSONString: any;
   UUID: any;
+};
+
+export type Activity = {
+  __typename?: 'Activity';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  note?: Maybe<Note>;
+  objectId?: Maybe<Scalars['String']>;
+  objectType?: Maybe<Scalars['String']>;
+  payload?: Maybe<Scalars['JSONString']>;
+  relatedObjectId?: Maybe<Scalars['String']>;
+  targetId?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['DateTime'];
+  verb: ActivityVerb;
+};
+
+export enum ActivityVerb {
+  Accept = 'ACCEPT',
+  Add = 'ADD',
+  Announce = 'ANNOUNCE',
+  Arrive = 'ARRIVE',
+  Block = 'BLOCK',
+  Create = 'CREATE',
+  Delete = 'DELETE',
+  Dislike = 'DISLIKE',
+  Flag = 'FLAG',
+  Follow = 'FOLLOW',
+  Ignore = 'IGNORE',
+  Invite = 'INVITE',
+  Join = 'JOIN',
+  Leave = 'LEAVE',
+  Like = 'LIKE',
+  Listen = 'LISTEN',
+  Move = 'MOVE',
+  Offer = 'OFFER',
+  Question = 'QUESTION',
+  Read = 'READ',
+  Reject = 'REJECT',
+  Remove = 'REMOVE',
+  Share = 'SHARE',
+  Tentativeaccept = 'TENTATIVEACCEPT',
+  Tentativereject = 'TENTATIVEREJECT',
+  Travel = 'TRAVEL',
+  Undo = 'UNDO',
+  Update = 'UPDATE',
+  View = 'VIEW'
+}
+
+export type CreateNote = {
+  __typename?: 'CreateNote';
+  activity?: Maybe<Activity>;
+};
+
+export type CreateNoteInput = {
+  actorId: Scalars['String'];
+  content: Scalars['String'];
 };
 
 export type CreateUserInput = {
@@ -23,6 +81,27 @@ export type CreateUserInput = {
 
 export type CreateUserResult = Error | UserProfile;
 
+export type Customer = {
+  __typename?: 'Customer';
+  createdAt: Scalars['DateTime'];
+  datapoints?: Maybe<Array<Maybe<CustomerDataPoint>>>;
+  email?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  relatedUser?: Maybe<UserProfile>;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type CustomerDataPoint = {
+  __typename?: 'CustomerDataPoint';
+  key?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type CustomerDataPointInput = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
 
 export type Error = {
   __typename?: 'Error';
@@ -31,8 +110,18 @@ export type Error = {
 
 
 
+export type Image = {
+  __typename?: 'Image';
+  contentUrl: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createNote?: Maybe<CreateNote>;
   createUser?: Maybe<CreateUserResult>;
   passwordChange?: Maybe<PasswordChange>;
   passwordReset?: Maybe<PasswordReset>;
@@ -40,10 +129,16 @@ export type Mutation = {
   register?: Maybe<Register>;
   resendActivationEmail?: Maybe<ResendActivationEmail>;
   sendPasswordResetEmail?: Maybe<SendPasswordResetEmail>;
+  subscribeByEmail?: Maybe<SubscribeByEmail>;
   tokenAuth?: Maybe<ObtainJsonWebToken>;
   updateAccount?: Maybe<UpdateAccount>;
   verifyAccount?: Maybe<VerifyAccount>;
   verifyToken?: Maybe<VerifyToken>;
+};
+
+
+export type MutationCreateNoteArgs = {
+  input?: Maybe<CreateNoteInput>;
 };
 
 
@@ -91,6 +186,11 @@ export type MutationSendPasswordResetEmailArgs = {
 };
 
 
+export type MutationSubscribeByEmailArgs = {
+  input?: Maybe<SubscribeByEmailInput>;
+};
+
+
 export type MutationTokenAuthArgs = {
   email_Iexact?: Maybe<Scalars['String']>;
   password: Scalars['String'];
@@ -115,6 +215,14 @@ export type MutationVerifyTokenArgs = {
 
 export type Node = {
   id: Scalars['ID'];
+};
+
+export type Note = {
+  __typename?: 'Note';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export type ObtainJsonWebToken = {
@@ -143,7 +251,13 @@ export type PasswordReset = {
 
 export type Query = {
   __typename?: 'Query';
+  activities?: Maybe<Array<Maybe<Activity>>>;
   myProfile?: Maybe<UserProfile>;
+};
+
+
+export type QueryActivitiesArgs = {
+  actorId: Scalars['ID'];
 };
 
 export type RefreshToken = {
@@ -175,6 +289,19 @@ export type SendPasswordResetEmail = {
   success?: Maybe<Scalars['Boolean']>;
 };
 
+export type SubscribeByEmail = {
+  __typename?: 'SubscribeByEmail';
+  created?: Maybe<Scalars['Boolean']>;
+  datapoints?: Maybe<Array<Maybe<CustomerDataPoint>>>;
+  email?: Maybe<Scalars['String']>;
+};
+
+export type SubscribeByEmailInput = {
+  actorId: Scalars['String'];
+  datapoints?: Maybe<Array<Maybe<CustomerDataPointInput>>>;
+  email: Scalars['String'];
+};
+
 
 export type UpdateAccount = {
   __typename?: 'UpdateAccount';
@@ -195,6 +322,7 @@ export type UserNode = Node & {
   lastLogin?: Maybe<Scalars['DateTime']>;
   lastName: Scalars['String'];
   pk?: Maybe<Scalars['Int']>;
+  relatedCustomer?: Maybe<Customer>;
   secondaryEmail?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];

@@ -3,6 +3,61 @@ schema {
   mutation: Mutation
 }
 
+type Activity {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  id: String!
+  verb: ActivityVerb!
+  payload: JSONString
+  objectId: String
+  targetId: String
+  relatedObjectId: String
+  objectType: String
+  note: Note
+  image: Image
+}
+
+enum ActivityVerb {
+  ACCEPT
+  ADD
+  ANNOUNCE
+  ARRIVE
+  BLOCK
+  CREATE
+  DELETE
+  DISLIKE
+  FLAG
+  FOLLOW
+  IGNORE
+  INVITE
+  JOIN
+  LEAVE
+  LIKE
+  LISTEN
+  MOVE
+  OFFER
+  QUESTION
+  REJECT
+  READ
+  REMOVE
+  SHARE
+  TENTATIVEREJECT
+  TENTATIVEACCEPT
+  TRAVEL
+  UNDO
+  UPDATE
+  VIEW
+}
+
+type CreateNote {
+  activity: Activity
+}
+
+input CreateNoteInput {
+  actorId: String!
+  content: String!
+}
+
 input CreateUserInput {
   email: String!
   firstName: String!
@@ -10,6 +65,25 @@ input CreateUserInput {
 }
 
 union CreateUserResult = UserProfile | Error
+
+type Customer {
+  id: UUID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String
+  relatedUser: UserProfile
+  datapoints: [CustomerDataPoint]
+}
+
+type CustomerDataPoint {
+  key: String
+  value: String
+}
+
+input CustomerDataPointInput {
+  key: String!
+  value: String!
+}
 
 scalar DateTime
 
@@ -21,7 +95,18 @@ scalar ExpectedErrorType
 
 scalar GenericScalar
 
+type Image {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  id: String!
+  contentUrl: String!
+}
+
+scalar JSONString
+
 type Mutation {
+  createNote(input: CreateNoteInput): CreateNote
+  subscribeByEmail(input: SubscribeByEmailInput): SubscribeByEmail
   register(email: String!, username: String!, firstName: String!, lastName: String!, password1: String!, password2: String!): Register
   verifyAccount(token: String!): VerifyAccount
   tokenAuth(password: String!, email_Iexact: String, username_Iexact: String): ObtainJSONWebToken
@@ -37,6 +122,13 @@ type Mutation {
 
 interface Node {
   id: ID!
+}
+
+type Note {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  id: String!
+  content: String!
 }
 
 type ObtainJSONWebToken {
@@ -61,6 +153,7 @@ type PasswordReset {
 }
 
 type Query {
+  activities(actorId: ID!): [Activity]
   myProfile: UserProfile
 }
 
@@ -89,6 +182,18 @@ type SendPasswordResetEmail {
   errors: ExpectedErrorType
 }
 
+type SubscribeByEmail {
+  email: String
+  datapoints: [CustomerDataPoint]
+  created: Boolean
+}
+
+input SubscribeByEmailInput {
+  actorId: String!
+  email: String!
+  datapoints: [CustomerDataPointInput]
+}
+
 scalar UUID
 
 type UpdateAccount {
@@ -108,6 +213,7 @@ type UserNode implements Node {
   dateJoined: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
+  relatedCustomer: Customer
   pk: Int
   archived: Boolean
   verified: Boolean
