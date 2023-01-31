@@ -1,14 +1,15 @@
 import json
 from dataclasses import dataclass
-from typing import Callable, Optional, Mapping, Any
+from typing import Callable, Optional, Mapping, Any, List
 
 import django.conf
 import pytest
 from graphql_jwt.shortcuts import get_token
 from pytest_django.lazy_django import skip_if_no_django
 
-from backend.apps.users.factories import UserFactory
-from backend.apps.users.models import User
+from fanout.apps.federation.models import Domain, Actor
+from fanout.apps.users.factories import UserFactory
+from fanout.apps.users.models import User
 
 GRAPHQL_ENDPOINT = '/api/graphql/'
 
@@ -43,6 +44,8 @@ class ProjectFixture:
     query: Callable[[str, Optional[str]], Mapping[str, Any]]
     mutation: Callable[[str, Optional[str]], Mapping[str, Any]]
     user: User
+    domain: Domain
+    other_actors: List[Actor]
 
 
 @pytest.fixture
@@ -65,5 +68,11 @@ def project_fixture_common(db, settings, test_user):
         print(json.dumps(reply, indent=2))
         return reply
 
-    return ProjectFixture(settings=settings, user=user, client=client, query=query, mutation=mutation)
+    from fanout.apps.federation import factories, models
 
+    settings.APP_HOSTNAME = "localhost"
+    domain = models.Domain.LOCAL()
+    actors = [factories.ActorFactory(domain=domain) for _ in range(5)]
+
+    return ProjectFixture(settings=settings, user=user, client=client, query=query, mutation=mutation,
+                          other_actors=actors, domain=domain)

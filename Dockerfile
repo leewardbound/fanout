@@ -27,15 +27,15 @@ RUN apk add --no-cache \
 # GeoDjango dependencies - commented out to keep the image lightweight, but easy to add
 # from: https://stackoverflow.com/questions/58403178/geodjango-cant-find-gdal-on-docker-python-alpine-based-image
 
-# RUN apk add --no-cache --upgrade postgresql-client libpq \
-#      && apk add --no-cache --upgrade --virtual .build-deps postgresql-dev zlib-dev jpeg-dev alpine-sdk \
-#      && apk add --no-cache --upgrade geos proj gdal binutils
+RUN apk add --no-cache --upgrade postgresql-client libpq \
+     && apk add --no-cache --upgrade --virtual .build-deps postgresql-dev zlib-dev jpeg-dev alpine-sdk \
+     && apk add --no-cache --upgrade geos proj gdal binutils
 
-# RUN ln -s /usr/lib/libproj.so.25 /usr/lib/libproj.so \
-#    && ln -s /usr/lib/libgdal.so.31 /usr/lib/libgdal.so \
-#    && ln -s /usr/lib/libgeos_c.so.1 /usr/lib/libgeos_c.so
+RUN ln -s /usr/lib/libproj.so.25 /usr/lib/libproj.so \
+   && ln -s /usr/lib/libgdal.so.31 /usr/lib/libgdal.so \
+   && ln -s /usr/lib/libgeos_c.so.1 /usr/lib/libgeos_c.so
 
-#ENV GDAL_LIBRARY_PATH='/usr/lib/libgdal.so'
+ENV GDAL_LIBRARY_PATH='/usr/lib/libgdal.so'
 
 #
 #
@@ -67,7 +67,7 @@ WORKDIR /app
 # to the final image
 RUN PIPENV_VENV_IN_PROJECT=true pipenv run pip3 install -r requirements.freeze.txt
 
-COPY backend/ /app/backend
+COPY fanout/ /app/backend
 COPY fixtures/ /app/fixtures
 COPY manage.py wsgi.py /app/
 
@@ -76,7 +76,7 @@ RUN chmod +x /*.sh
 
 #
 #
-# Release-backend
+# Release-fanout
 FROM base as release-backend
 
 COPY --from=builder /app /app
@@ -150,8 +150,8 @@ RUN apt update -yq && apt install -yq \
 RUN pip install --no-cache-dir --upgrade pipenv pip \
     && mkdir /app
 
-# postgis dependencies - uncomment for postgis in development
-# RUN apt install -yq libgdal-dev libproj-dev
+# postgis geo dependencies - uncomment for postgis in development
+RUN apt install -yq libgdal-dev libproj-dev
 
 WORKDIR /app
 
@@ -191,5 +191,5 @@ RUN apk add --no-cache git-crypt
 
 #
 #
-# This make release-backend the default stage
+# This make release-fanout the default stage
 FROM release-backend
