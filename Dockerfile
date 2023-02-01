@@ -67,7 +67,7 @@ WORKDIR /app
 # to the final image
 RUN PIPENV_VENV_IN_PROJECT=true pipenv run pip3 install -r requirements.freeze.txt
 
-COPY fanout/ /app/backend
+COPY fanout/ /app/fanout
 COPY fixtures/ /app/fixtures
 COPY manage.py wsgi.py /app/
 
