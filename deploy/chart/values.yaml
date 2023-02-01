@@ -29,7 +29,7 @@ ingress:
     - hosts: []
       secretName: ""
 
-  fanout:
+fanout:
   # -- Log level for server and worker
   log_level: info
   # -- Secret key used for cookie singing and unique user IDs,

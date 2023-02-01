@@ -9,6 +9,6 @@ TARGET_ARGS=$(test -z "$TARGET" && echo "" || echo "--target=$TARGET")
 TARGET_SUFFIX=$(test -z "$TARGET" && echo "" || echo "/$TARGET")
 IMAGE="${CI_REGISTRY_IMAGE}${TARGET_SUFFIX}:$VERSION"
 
-bin/build $VERSION $TARGET
+bin/build $TARGET $VERSION
 
 docker push $IMAGE

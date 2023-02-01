@@ -355,6 +355,21 @@ export type VerifyToken = {
 
 export type UserProfileFragment = { __typename?: 'UserProfile', id: any, firstName: string, lastName: string, email: string, username: string };
 
+export type TokenAuthMutationVariables = Exact<{
+  username_Iexact: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type TokenAuthMutation = { __typename?: 'Mutation', tokenAuth?: Maybe<{ __typename?: 'ObtainJSONWebToken', token?: Maybe<string>, success?: Maybe<boolean>, errors?: Maybe<any>, refreshToken?: Maybe<string> }> };
+
+export type RefreshTokenMutationVariables = Exact<{
+  refreshToken: Scalars['String'];
+}>;
+
+
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken?: Maybe<{ __typename?: 'RefreshToken', token?: Maybe<string>, success?: Maybe<boolean>, errors?: Maybe<any>, refreshToken?: Maybe<string> }> };
+
 export type MyProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -372,6 +387,77 @@ export const UserProfileFragmentDoc = gql`
   username
 }
     `;
+export const TokenAuthDocument = gql`
+    mutation tokenAuth($username_Iexact: String!, $password: String!) {
+  tokenAuth(username_Iexact: $username_Iexact, password: $password) {
+    token
+    success
+    errors
+    refreshToken
+  }
+}
+    `;
+export type TokenAuthMutationFn = Apollo.MutationFunction<TokenAuthMutation, TokenAuthMutationVariables>;
+
+/**
+ * __useTokenAuthMutation__
+ *
+ * To run a mutation, you first call `useTokenAuthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTokenAuthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [tokenAuthMutation, { data, loading, error }] = useTokenAuthMutation({
+ *   variables: {
+ *      username_Iexact: // value for 'username_Iexact'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useTokenAuthMutation(baseOptions?: Apollo.MutationHookOptions<TokenAuthMutation, TokenAuthMutationVariables>) {
+        return Apollo.useMutation<TokenAuthMutation, TokenAuthMutationVariables>(TokenAuthDocument, baseOptions);
+      }
+export type TokenAuthMutationHookResult = ReturnType<typeof useTokenAuthMutation>;
+export type TokenAuthMutationResult = Apollo.MutationResult<TokenAuthMutation>;
+export type TokenAuthMutationOptions = Apollo.BaseMutationOptions<TokenAuthMutation, TokenAuthMutationVariables>;
+export const RefreshTokenDocument = gql`
+    mutation refreshToken($refreshToken: String!) {
+  refreshToken(refreshToken: $refreshToken) {
+    token
+    success
+    errors
+    refreshToken
+  }
+}
+    `;
+export type RefreshTokenMutationFn = Apollo.MutationFunction<RefreshTokenMutation, RefreshTokenMutationVariables>;
+
+/**
+ * __useRefreshTokenMutation__
+ *
+ * To run a mutation, you first call `useRefreshTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshTokenMutation, { data, loading, error }] = useRefreshTokenMutation({
+ *   variables: {
+ *      refreshToken: // value for 'refreshToken'
+ *   },
+ * });
+ */
+export function useRefreshTokenMutation(baseOptions?: Apollo.MutationHookOptions<RefreshTokenMutation, RefreshTokenMutationVariables>) {
+        return Apollo.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(RefreshTokenDocument, baseOptions);
+      }
+export type RefreshTokenMutationHookResult = ReturnType<typeof useRefreshTokenMutation>;
+export type RefreshTokenMutationResult = Apollo.MutationResult<RefreshTokenMutation>;
+export type RefreshTokenMutationOptions = Apollo.BaseMutationOptions<RefreshTokenMutation, RefreshTokenMutationVariables>;
 export const MyProfileDocument = gql`
     query myProfile {
   myProfile {

@@ -60,7 +60,7 @@ test_backend:
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - helm dependency update ./deploy/chart/
   script:
-    - bin/gke.deploy "${CI_COMMIT_SHA}" "${ENV}" $PWD/helm-values.${ENV}.secrets.yaml
+    - bin/helm-deploy "${CI_COMMIT_SHA}" "${ENV}" $PWD/helm-values.${ENV}.secrets.yaml
 
 
 deploy_staging:
