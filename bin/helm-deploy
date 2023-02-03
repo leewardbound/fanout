@@ -31,8 +31,11 @@ echo "Deploying helm release into $NAMESPACE..."
 
 kubectl get pods -n $NAMESPACE
 
-helm upgrade --install $CI_PROJECT_NAME deploy/chart/ \
+CMD="helm upgrade --install $CI_PROJECT_NAME deploy/chart/ \
     --values="$VALUES" \
     -n $NAMESPACE --create-namespace \
     --set image.repository=$CI_REGISTRY_IMAGE/$CHANNEL \
     --set image.tag=$VERSION
+"
+echo $CMD
+$CMD

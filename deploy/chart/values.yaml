@@ -84,6 +84,15 @@ fanout:
 
 env:
   APP_HOSTNAME: fanout.com
+  DATABASE_URL: "postgresql://fanout:fanout@fanout-postgresql:5432/fanout"
+  MINIO_STORAGE_ENDPOINT: fanout-minio:9000
+  MINIO_STORAGE_ACCESS_KEY: fanout
+  MINIO_STORAGE_SECRET_KEY: fanout-secret
+  MINIO_STORAGE_MEDIA_BUCKET_NAME: assets
+  MINIO_STORAGE_USE_HTTPS: false
+  MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET: true
+  MINIO_STORAGE_MEDIA_URL: "https://fanout.com/fanout-assets"
+  MINIO_STORAGE_MEDIA_USE_PRESIGNED: true
 
 envFrom: []
 #  - configMapRef:
@@ -154,12 +163,21 @@ prometheus:
 
 postgresql:
   # -- enable the bundled bitnami postgresql chart
-  enabled: false
-  postgresqlUsername: "fanout"
-  # postgresqlPassword: ""
-  postgresqlDatabase: "fanout"
-  persistence:
-    enabled: true
-  #   storageClass:
-  #   accessModes:
-  #     - ReadWriteOnce
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        postgresPassword: "fanout"
+        username: "fanout"
+        password: "fanout"
+        database: "fanout"
+
+minio:
+  # -- enable the bundled bitnami minio chart
+  enabled: true
+  rootUser: "fanout"
+  rootPassword: "fanout-secret"
+  mode: standalone
+  replicas: 1
+  buckets:
+    - name: assets
