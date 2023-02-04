@@ -4,6 +4,7 @@ cd $(dirname $0)/../..
 
 for ENV in staging production ; do
   NAMESPACE="${CI_PROJECT_NAME}-${ENV}"
+  kubens $NAMESPACE
 
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -16,13 +17,14 @@ EOF
 cat <<EOF | kubectl apply -f -
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
-  name: ci-cluster-role
+  name: ci-$NAMESPACE-role
   namespace: $NAMESPACE
 rules:
   - apiGroups:
         - ""
+        - "*"
         - apps
         - autoscaling
         - batch
@@ -57,17 +59,17 @@ EOF
 cat <<EOF | kubectl apply -f -
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
-  name: ci-cluster-role-binding
+  name: ci-role-binding
 subjects:
 - namespace: $NAMESPACE
   kind: ServiceAccount
   name: ci-service-account
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: ci-cluster-role
+  kind: Role
+  name: ci-$NAMESPACE-role
 EOF
 
 echo "Verifying the service account..."
