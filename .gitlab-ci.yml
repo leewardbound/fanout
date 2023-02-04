@@ -56,6 +56,7 @@ test_backend:
     # Uncomment these lines to authenticate with the GKE cluster
     #- gcloud auth activate-service-account --key-file $GCP_SERVICE_KEY
     #- gcloud container clusters get-credentials fanout --zone=us-west2-a --project=$GCP_PROJECT_ID
+    - export KUBECONFIG=$PWD/kubeconfig-sa.$ENV.secrets.yaml
 
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - helm dependency update ./deploy/chart/
