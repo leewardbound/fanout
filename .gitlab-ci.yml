@@ -56,6 +56,9 @@ test_backend:
     # Uncomment these lines to authenticate with the GKE cluster
     #- gcloud auth activate-service-account --key-file $GCP_SERVICE_KEY
     #- gcloud container clusters get-credentials fanout --zone=us-west2-a --project=$GCP_PROJECT_ID
+
+    # Or use these lines with the deploy/cluster/install_ci_serviceaccount.sh script
+    # to create a service account and store the connection file in the repo with git-crypt
     - export KUBECONFIG=$PWD/kubeconfig-sa.$ENV.secrets.yaml
     - chmod 0600 $KUBECONFIG
 

@@ -7,7 +7,7 @@ replicas:
 priorityClassName:
 
 image:
-  repository: registry.gitlab.com/fanout/fanout
+  repository: registry.gitlab.com/boundcorp/fanout # this gets overridden by bin/helm-deploy
   tag: latest
   pullPolicy: IfNotPresent
   pullSecrets:
@@ -148,10 +148,6 @@ readinessProbe:
     port: http
   initialDelaySeconds: 10
   periodSeconds: 5
-
-serviceAccount:
-  # -- Service account is needed for managed outposts
-  create: true
 
 prometheus:
   serviceMonitor:
