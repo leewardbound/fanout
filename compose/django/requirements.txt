@@ -1,6 +1,6 @@
 django-auditlog
 django-ses
-django-s3-storage==0.12.4
+django-s3-storage==0.14.0
 djangorestframework_simplejwt
 django-choices
 factory-boy
